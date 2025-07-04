@@ -1,0 +1,11 @@
+.ababil-styled-text-container {
+    display: inline-block;
+    width: 100%;
+    line-height: 1.5;
+}
+
+.ababil-text-segment {
+    display: inline;
+    line-height: inherit;
+    transition: all 0.3s ease;
+}
