@@ -26,6 +26,9 @@ add_action('elementor/widgets/register', 'ababil_register_widgets');
 function ababil_register_widgets($widgets_manager) {
     require_once(__DIR__ . '/widgets/styled-text.php');
     $widgets_manager->register(new \Ababil_Styled_Text_Widget());
+    
+    require_once(__DIR__ . '/widgets/content-box.php');
+    $widgets_manager->register(new \Ababil_Content_Box_Widget());
 }
 
 // Register assets

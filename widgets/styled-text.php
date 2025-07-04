@@ -31,6 +31,27 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // NEW: HTML Tag selection control for SEO
+        $this->add_control(
+            'html_tag',
+            [
+                'label' => __('HTML Tag', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'h1' => 'H1',
+                    'h2' => 'H2',
+                    'h3' => 'H3',
+                    'h4' => 'H4',
+                    'h5' => 'H5',
+                    'h6' => 'H6',
+                    'div' => 'div',
+                    'p' => 'p',
+                ],
+                'default' => 'div',
+                'description' => __('Select the HTML tag for the container. Use H1-H6 for headings.', 'ababil'),
+            ]
+        );
+
         $repeater = new \Elementor\Repeater();
 
         // Text Content
@@ -58,7 +79,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'dynamic' => [
                     'active' => true,
                 ],
-                'render_type' => 'ui', // Ensures the dynamic tag icon appears beside the input
+                'render_type' => 'ui',
                 'default' => [
                     'url' => '',
                     'is_external' => false,
@@ -236,84 +257,98 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
+
+        // NEW: Get the selected HTML tag and sanitize it
+        $allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div'];
+        $html_tag = isset($settings['html_tag']) ? $settings['html_tag'] : 'div';
+        if (!in_array($html_tag, $allowed_tags)) {
+            $html_tag = 'div'; // Fallback to 'div' if the tag is not allowed
+        }
         
         $this->add_render_attribute('container', 'class', 'ababil-styled-text-container');
         
-        echo '<div ' . $this->get_render_attribute_string('container') . '>';
+        // NEW: Use the dynamic HTML tag for the container
+        echo '<' . $html_tag . ' ' . $this->get_render_attribute_string('container') . '>';
         
-        foreach ($settings['text_parts'] as $index => $item) {
-            $this->add_render_attribute('segment_' . $index, [
-                'class' => [
-                    'ababil-text-segment',
-                    'elementor-repeater-item-' . $item['_id'],
-                    $item['css_class']
-                ],
-            ]);
-            
-            // Add link attributes if URL exists
-            if (!empty($item['link']['url'])) {
-                $this->add_render_attribute('segment_' . $index, 'href', $item['link']['url']);
+        if (!empty($settings['text_parts'])) {
+            foreach ($settings['text_parts'] as $index => $item) {
+                // Using a unique key for each repeater item's render attribute
+                $segment_key = 'segment_' . $item['_id'];
                 
-                if ($item['link']['is_external']) {
-                    $this->add_render_attribute('segment_' . $index, 'target', '_blank');
+                $this->add_render_attribute($segment_key, [
+                    'class' => [
+                        'ababil-text-segment',
+                        'elementor-repeater-item-' . $item['_id'],
+                    ],
+                ]);
+
+                if (!empty($item['css_class'])) {
+                    $this->add_render_attribute($segment_key, 'class', $item['css_class']);
                 }
                 
-                if ($item['link']['nofollow']) {
-                    $this->add_render_attribute('segment_' . $index, 'rel', 'nofollow');
+                // Add link attributes if URL exists
+                if (!empty($item['link']['url'])) {
+                    // Use add_link_attributes for better compatibility with Elementor features
+                    $this->add_link_attributes($segment_key, $item['link']);
+                    
+                    echo '<a ' . $this->get_render_attribute_string($segment_key) . '>';
+                    echo wp_kses_post($item['text_part']); // Use wp_kses_post for better security on text content
+                    echo '</a>';
+                } else {
+                    echo '<span ' . $this->get_render_attribute_string($segment_key) . '>';
+                    echo wp_kses_post($item['text_part']);
+                    echo '</span>';
                 }
-                
-                echo '<a ' . $this->get_render_attribute_string('segment_' . $index) . '>';
-                echo esc_html($item['text_part']);
-                echo '</a>';
-            } else {
-                echo '<span ' . $this->get_render_attribute_string('segment_' . $index) . '>';
-                echo esc_html($item['text_part']);
-                echo '</span>';
             }
         }
         
-        echo '</div>';
+        // NEW: Close the dynamic HTML tag
+        echo '</' . $html_tag . '>';
     }
 
     protected function content_template() {
         ?>
-        <div class="ababil-styled-text-container">
-            <# _.each(settings.text_parts, function(item, index) { #>
-                <#
+        <#
+        // NEW: Get the selected HTML tag for the live preview
+        var html_tag = settings.html_tag || 'div';
+        #>
+        <{{ html_tag }} class="ababil-styled-text-container">
+            <# _.each(settings.text_parts, function(item, index) { 
+                var segment_key = 'segment_' + item._id;
                 var segmentClasses = 'ababil-text-segment elementor-repeater-item-' + item._id;
+
                 if (item.css_class) {
                     segmentClasses += ' ' + item.css_class;
                 }
                 
-                view.addRenderAttribute('segment_' + index, {
+                view.addRenderAttribute(segment_key, {
                     'class': segmentClasses
                 });
                 
                 if (item.link && item.link.url) {
-                    view.addRenderAttribute('segment_' + index, 'href', item.link.url);
+                    view.addRenderAttribute(segment_key, 'href', item.link.url);
                     
                     if (item.link.is_external) {
-                        view.addRenderAttribute('segment_' + index, 'target', '_blank');
+                        view.addRenderAttribute(segment_key, 'target', '_blank');
                     }
                     
                     if (item.link.nofollow) {
-                        view.addRenderAttribute('segment_' + index, 'rel', 'nofollow');
+                        view.addRenderAttribute(segment_key, 'rel', 'nofollow');
                     }
                     #>
-                    <a {{{ view.getRenderAttributeString('segment_' + index) }}}>
+                    <a {{{ view.getRenderAttributeString(segment_key) }}}>
                         {{{ item.text_part }}}
                     </a>
                     <#
                 } else {
                     #>
-                    <span {{{ view.getRenderAttributeString('segment_' + index) }}}>
+                    <span {{{ view.getRenderAttributeString(segment_key) }}}>
                         {{{ item.text_part }}}
                     </span>
                     <#
                 }
-                #>
-            <# }); #>
-        </div>
+            }); #>
+        </{{ html_tag }}>
         <?php
     }
 }
