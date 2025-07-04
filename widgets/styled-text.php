@@ -33,12 +33,13 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
 
         $repeater = new \Elementor\Repeater();
 
-        // Text Content (No defaults)
+        // Text Content
         $repeater->add_control(
             'text_part',
             [
                 'label' => __('Text Part', 'ababil'),
                 'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'default' => '',
                 'label_block' => true,
                 'dynamic' => [
                     'active' => true,
@@ -46,7 +47,38 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Text Color (No defaults)
+        // URL Link
+        $repeater->add_control(
+            'link',
+            [
+                'label' => __('Link', 'ababil'),
+                'type' => \Elementor\Controls_Manager::URL,
+                'placeholder' => __('https://your-link.com', 'ababil'),
+                'show_external' => true,
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'render_type' => 'ui', // Ensures the dynamic tag icon appears beside the input
+                'default' => [
+                    'url' => '',
+                    'is_external' => false,
+                    'nofollow' => false,
+                ],
+            ]
+        );
+
+        // Custom Class
+        $repeater->add_control(
+            'css_class',
+            [
+                'label' => __('Custom CSS Class', 'ababil'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => '',
+                'title' => __('Add your custom class WITHOUT the dot. e.g: my-class', 'ababil'),
+            ]
+        );
+
+        // Text Color
         $repeater->add_control(
             'text_color',
             [
@@ -58,19 +90,18 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Background (No defaults)
-        $repeater->add_control(
-            'background_color',
+        // Background
+        $repeater->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
             [
-                'label' => __('Background Color', 'ababil'),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'background-color: {{VALUE}}',
-                ],
+                'name' => 'background',
+                'label' => __('Background', 'ababil'),
+                'types' => ['classic', 'gradient'],
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
             ]
         );
 
-        // Typography (No defaults)
+        // Typography
         $repeater->add_group_control(
             \Elementor\Group_Control_Typography::get_type(),
             [
@@ -79,7 +110,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Text Shadow (No defaults)
+        // Text Shadow
         $repeater->add_group_control(
             \Elementor\Group_Control_Text_Shadow::get_type(),
             [
@@ -88,7 +119,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Margin (No defaults)
+        // Margin
         $repeater->add_responsive_control(
             'margin',
             [
@@ -101,7 +132,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Padding (No defaults)
+        // Padding
         $repeater->add_responsive_control(
             'padding',
             [
@@ -114,7 +145,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Border (No defaults)
+        // Border
         $repeater->add_group_control(
             \Elementor\Group_Control_Border::get_type(),
             [
@@ -123,7 +154,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Border Radius (No defaults)
+        // Border Radius
         $repeater->add_responsive_control(
             'border_radius',
             [
@@ -136,19 +167,46 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Box Shadow
+        $repeater->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'box_shadow',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+            ]
+        );
+
         $this->add_control(
             'text_parts',
             [
                 'label' => __('Text Parts', 'ababil'),
                 'type' => \Elementor\Controls_Manager::REPEATER,
                 'fields' => $repeater->get_controls(),
+                'default' => [
+                    [
+                        'text_part' => 'This is Bangladesh, ',
+                    ],
+                    [
+                        'text_part' => 'a leading country',
+                        'typography' => ['font_weight' => 'bold']
+                    ],
+                    [
+                        'text_part' => ' in apparel market, ',
+                    ],
+                    [
+                        'text_part' => 'get it now',
+                        'text_color' => '#ff0000',
+                        'typography' => ['font_weight' => 'bold'],
+                        'link' => ['url' => '#']
+                    ],
+                ],
                 'title_field' => '{{{ text_part }}}',
             ]
         );
 
         $this->end_controls_section();
 
-        // Container Style (No defaults)
+        // Container Style
         $this->start_controls_section(
             'container_style',
             [
@@ -187,15 +245,75 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             $this->add_render_attribute('segment_' . $index, [
                 'class' => [
                     'ababil-text-segment',
-                    'elementor-repeater-item-' . $item['_id']
+                    'elementor-repeater-item-' . $item['_id'],
+                    $item['css_class']
                 ],
             ]);
             
-            echo '<span ' . $this->get_render_attribute_string('segment_' . $index) . '>';
-            echo esc_html($item['text_part']);
-            echo '</span>';
+            // Add link attributes if URL exists
+            if (!empty($item['link']['url'])) {
+                $this->add_render_attribute('segment_' . $index, 'href', $item['link']['url']);
+                
+                if ($item['link']['is_external']) {
+                    $this->add_render_attribute('segment_' . $index, 'target', '_blank');
+                }
+                
+                if ($item['link']['nofollow']) {
+                    $this->add_render_attribute('segment_' . $index, 'rel', 'nofollow');
+                }
+                
+                echo '<a ' . $this->get_render_attribute_string('segment_' . $index) . '>';
+                echo esc_html($item['text_part']);
+                echo '</a>';
+            } else {
+                echo '<span ' . $this->get_render_attribute_string('segment_' . $index) . '>';
+                echo esc_html($item['text_part']);
+                echo '</span>';
+            }
         }
         
         echo '</div>';
+    }
+
+    protected function content_template() {
+        ?>
+        <div class="ababil-styled-text-container">
+            <# _.each(settings.text_parts, function(item, index) { #>
+                <#
+                var segmentClasses = 'ababil-text-segment elementor-repeater-item-' + item._id;
+                if (item.css_class) {
+                    segmentClasses += ' ' + item.css_class;
+                }
+                
+                view.addRenderAttribute('segment_' + index, {
+                    'class': segmentClasses
+                });
+                
+                if (item.link && item.link.url) {
+                    view.addRenderAttribute('segment_' + index, 'href', item.link.url);
+                    
+                    if (item.link.is_external) {
+                        view.addRenderAttribute('segment_' + index, 'target', '_blank');
+                    }
+                    
+                    if (item.link.nofollow) {
+                        view.addRenderAttribute('segment_' + index, 'rel', 'nofollow');
+                    }
+                    #>
+                    <a {{{ view.getRenderAttributeString('segment_' + index) }}}>
+                        {{{ item.text_part }}}
+                    </a>
+                    <#
+                } else {
+                    #>
+                    <span {{{ view.getRenderAttributeString('segment_' + index) }}}>
+                        {{{ item.text_part }}}
+                    </span>
+                    <#
+                }
+                #>
+            <# }); #>
+        </div>
+        <?php
     }
 }
