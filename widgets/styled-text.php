@@ -14,14 +14,10 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_categories() {
-        return ['ababil']; // Our custom category
+        return ['ababil'];
     }
 
     public function get_style_depends() {
-        return ['ababil-styled-text'];
-    }
-
-    public function get_script_depends() {
         return ['ababil-styled-text'];
     }
 
@@ -37,12 +33,12 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
 
         $repeater = new \Elementor\Repeater();
 
+        // Text Content (No defaults)
         $repeater->add_control(
             'text_part',
             [
                 'label' => __('Text Part', 'ababil'),
                 'type' => \Elementor\Controls_Manager::TEXTAREA,
-                'default' => '',
                 'label_block' => true,
                 'dynamic' => [
                     'active' => true,
@@ -50,6 +46,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Text Color (No defaults)
         $repeater->add_control(
             'text_color',
             [
@@ -61,11 +58,81 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Background (No defaults)
+        $repeater->add_control(
+            'background_color',
+            [
+                'label' => __('Background Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'background-color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // Typography (No defaults)
         $repeater->add_group_control(
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'typography',
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+            ]
+        );
+
+        // Text Shadow (No defaults)
+        $repeater->add_group_control(
+            \Elementor\Group_Control_Text_Shadow::get_type(),
+            [
+                'name' => 'text_shadow',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+            ]
+        );
+
+        // Margin (No defaults)
+        $repeater->add_responsive_control(
+            'margin',
+            [
+                'label' => __('Margin', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Padding (No defaults)
+        $repeater->add_responsive_control(
+            'padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Border (No defaults)
+        $repeater->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'border',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+            ]
+        );
+
+        // Border Radius (No defaults)
+        $repeater->add_responsive_control(
+            'border_radius',
+            [
+                'label' => __('Border Radius', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
             ]
         );
 
@@ -75,31 +142,13 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'label' => __('Text Parts', 'ababil'),
                 'type' => \Elementor\Controls_Manager::REPEATER,
                 'fields' => $repeater->get_controls(),
-                'default' => [
-                    [
-                        'text_part' => 'This is Bangladesh, ',
-                    ],
-                    [
-                        'text_part' => 'a leading country',
-                        'text_color' => '#000000',
-                        'typography' => ['font_weight' => 'bold'],
-                    ],
-                    [
-                        'text_part' => ' in apparel market, ',
-                    ],
-                    [
-                        'text_part' => 'get it now',
-                        'text_color' => '#ff0000',
-                        'typography' => ['font_weight' => 'bold'],
-                    ],
-                ],
                 'title_field' => '{{{ text_part }}}',
             ]
         );
 
         $this->end_controls_section();
 
-        // Container Style
+        // Container Style (No defaults)
         $this->start_controls_section(
             'container_style',
             [
@@ -114,20 +163,10 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'label' => __('Alignment', 'ababil'),
                 'type' => \Elementor\Controls_Manager::CHOOSE,
                 'options' => [
-                    'left' => [
-                        'title' => __('Left', 'ababil'),
-                        'icon' => 'eicon-text-align-left',
-                    ],
-                    'center' => [
-                        'title' => __('Center', 'ababil'),
-                        'icon' => 'eicon-text-align-center',
-                    ],
-                    'right' => [
-                        'title' => __('Right', 'ababil'),
-                        'icon' => 'eicon-text-align-right',
-                    ],
+                    'left' => ['title' => __('Left', 'ababil'), 'icon' => 'eicon-text-align-left'],
+                    'center' => ['title' => __('Center', 'ababil'), 'icon' => 'eicon-text-align-center'],
+                    'right' => ['title' => __('Right', 'ababil'), 'icon' => 'eicon-text-align-right'],
                 ],
-                'default' => 'left',
                 'selectors' => [
                     '{{WRAPPER}} .ababil-styled-text-container' => 'text-align: {{VALUE}};',
                 ],
@@ -140,7 +179,9 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
         
-        echo '<div class="ababil-styled-text-container">';
+        $this->add_render_attribute('container', 'class', 'ababil-styled-text-container');
+        
+        echo '<div ' . $this->get_render_attribute_string('container') . '>';
         
         foreach ($settings['text_parts'] as $index => $item) {
             $this->add_render_attribute('segment_' . $index, [
@@ -156,17 +197,5 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
         }
         
         echo '</div>';
-    }
-
-    protected function content_template() {
-        ?>
-        <div class="ababil-styled-text-container">
-            <# _.each(settings.text_parts, function(item, index) { #>
-                <span class="ababil-text-segment elementor-repeater-item-{{ item._id }}">
-                    {{{ item.text_part }}}
-                </span>
-            <# }); #>
-        </div>
-        <?php
     }
 }
