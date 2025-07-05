@@ -1,8 +1,12 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
+/**
+ * Ababil Content Box Widget for Elementor
+ */
 class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
 
     public function get_name() {
@@ -10,7 +14,7 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_title() {
-        return __('Content Box', 'ababil');
+        return __( 'Content Box', 'ababil' );
     }
 
     public function get_icon() {
@@ -18,13 +22,16 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_categories() {
-        return ['ababil'];
+        return [ 'ababil' ];
     }
 
     public function get_keywords() {
         return [ 'info box', 'feature', 'icon box', 'content', 'ababil' ];
     }
 
+    /**
+     * Register widget controls
+     */
     protected function register_controls() {
 
         //======================================================================================
@@ -33,8 +40,8 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_content',
             [
-                'label' => __('Content', 'ababil'),
-                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+                'label' => __( 'Content', 'ababil' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -45,22 +52,23 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 'label'   => esc_html__( 'Graphic Element', 'ababil' ),
                 'type'    => \Elementor\Controls_Manager::CHOOSE,
                 'options' => [
-                    'none'  => [ 'title' => esc_html__( 'None', 'ababil' ), 'icon'  => 'eicon-ban', ],
-                    'icon'  => [ 'title' => esc_html__( 'Icon', 'ababil' ), 'icon'  => 'eicon-star', ],
-                    'image' => [ 'title' => esc_html__( 'Image', 'ababil' ), 'icon'  => 'eicon-image-bold', ],
+                    'none'  => [ 'title' => esc_html__( 'None', 'ababil' ),  'icon' => 'eicon-ban' ],
+                    'icon'  => [ 'title' => esc_html__( 'Icon', 'ababil' ),  'icon' => 'eicon-star' ],
+                    'image' => [ 'title' => esc_html__( 'Image', 'ababil' ), 'icon' => 'eicon-image-bold' ],
                 ],
                 'default' => 'icon',
             ]
         );
 
+        // -- Control: Icon
         $this->add_control(
             'icon',
             [
-                'label' => __('Icon', 'ababil'),
-                'type' => \Elementor\Controls_Manager::ICONS,
-                'default' => [
-                    'value' => 'fas fa-star',
-                    'library' => 'fa-solid',
+                'label'     => __( 'Icon', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::ICONS,
+                'default'   => [
+                    'value'    => 'fas fa-star',
+                    'library'  => 'fa-solid',
                 ],
                 'condition' => [
                     'graphic_element' => 'icon',
@@ -68,12 +76,13 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // -- Control: Image
         $this->add_control(
             'image',
             [
-                'label' => __('Choose Image', 'ababil'),
-                'type' => \Elementor\Controls_Manager::MEDIA,
-                'default' => [
+                'label'     => __( 'Choose Image', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::MEDIA,
+                'default'   => [
                     'url' => \Elementor\Utils::get_placeholder_image_src(),
                 ],
                 'condition' => [
@@ -86,93 +95,103 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_text',
             [
-                'label' => __('Badge', 'ababil'),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'placeholder' => __('e.g. New', 'ababil'),
-                'separator' => 'before',
+                'label'       => __( 'Badge', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'placeholder' => __( 'e.g. New', 'ababil' ),
+                'separator'   => 'before',
             ]
         );
 
         // -- Control: Styled Heading (Repeater)
         $repeater = new \Elementor\Repeater();
-        
+
         $repeater->start_controls_tabs( 'heading_part_tabs' );
+
+        // Tab: Content
         $repeater->start_controls_tab( 'tab_content', [ 'label' => esc_html__( 'Content', 'ababil' ) ] );
-        
         $repeater->add_control(
-            'heading_part', [
-                'label' => esc_html__( 'Text', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => esc_html__( 'Styled Text', 'ababil' ),
+            'heading_part',
+            [
+                'label'       => esc_html__( 'Text', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'default'     => esc_html__( 'Styled Text', 'ababil' ),
                 'label_block' => true,
-                'dynamic' => [ 'active' => true ],
+                'dynamic'     => [ 'active' => true ],
             ]
         );
-
         $repeater->end_controls_tab();
+
+        // Tab: Style
         $repeater->start_controls_tab( 'tab_style', [ 'label' => esc_html__( 'Style', 'ababil' ) ] );
         $repeater->add_control(
-            'part_color', [
-                'label' => esc_html__( 'Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
+            'part_color',
+            [
+                'label'     => esc_html__( 'Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}}' ],
             ]
         );
         $repeater->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(), [
-                'name' => 'part_typography',
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'part_typography',
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
             ]
         );
         $repeater->add_group_control(
-			\Elementor\Group_Control_Background::get_type(),
-			[
-				'name' => 'part_background',
-				'types' => [ 'classic', 'gradient' ],
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name'     => 'part_background',
+                'types'    => [ 'classic', 'gradient' ],
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
-                'separator' => 'before'
-			]
-		);
+                'separator'=> 'before',
+            ]
+        );
         $repeater->add_group_control(
-            \Elementor\Group_Control_Border::get_type(), [
-                'name' => 'part_border',
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'part_border',
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
             ]
         );
         $repeater->add_responsive_control(
-            'part_padding', [
-                'label' => esc_html__( 'Padding', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+            'part_padding',
+            [
+                'label'      => esc_html__( 'Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
-                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+                'selectors'  => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
             ]
         );
         $repeater->add_responsive_control(
-            'part_margin', [
-                'label' => esc_html__( 'Margin', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+            'part_margin',
+            [
+                'label'      => esc_html__( 'Margin', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
-                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+                'selectors'  => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
             ]
         );
         $repeater->add_responsive_control(
-            'part_border_radius', [
-                'label' => esc_html__( 'Border Radius', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+            'part_border_radius',
+            [
+                'label'      => esc_html__( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
-                'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+                'selectors'  => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
             ]
         );
         $repeater->add_control(
-            'part_display', [
-                'label' => esc_html__( 'Display', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'options' => [
-                    '' => esc_html__('Default', 'ababil'),
-                    'inline-block' => esc_html__('Inline-Block', 'ababil'),
-                    'block' => esc_html__('Block', 'ababil'),
+            'part_display',
+            [
+                'label'     => esc_html__( 'Display', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SELECT,
+                'options'   => [
+                    ''            => esc_html__( 'Default', 'ababil' ),
+                    'inline-block'=> esc_html__( 'Inline-Block', 'ababil' ),
+                    'block'       => esc_html__( 'Block', 'ababil' ),
                 ],
-                'default' => 'inline-block',
+                'default'   => 'inline-block',
                 'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => 'display: {{VALUE}}' ],
             ]
         );
@@ -182,97 +201,807 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'heading_parts',
             [
-                'label' => __('Heading', 'ababil'),
-                'type' => \Elementor\Controls_Manager::REPEATER,
-                'fields' => $repeater->get_controls(),
-                'default' => [
+                'label'       => __( 'Heading', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::REPEATER,
+                'fields'      => $repeater->get_controls(),
+                'default'     => [
                     [ 'heading_part' => esc_html__( 'Flexible', 'ababil' ), 'part_typography_font_weight' => 'bold' ],
                     [ 'heading_part' => esc_html__( ' Content Box', 'ababil' ) ],
                 ],
                 'title_field' => '{{{ heading_part }}}',
-                'separator' => 'before',
+                'separator'   => 'before',
             ]
         );
 
-        $this->add_control( 'heading_tag', [ 'label' => esc_html__( 'Heading HTML Tag', 'ababil' ), 'type' => \Elementor\Controls_Manager::SELECT, 'options' => [ 'h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'div' => 'div', 'span' => 'span', 'p' => 'p', ], 'default' => 'h3' ] );
-        $this->add_control( 'sub_heading', [ 'label' => __('Sub Heading', 'ababil'), 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => __('This is a subheading for the content box.', 'ababil'), 'placeholder' => __('Enter your sub heading', 'ababil'), 'separator' => 'before' ] );
-        $this->add_control( 'description', [ 'label' => __('Description', 'ababil'), 'type' => \Elementor\Controls_Manager::WYSIWYG, 'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'ababil'), 'placeholder' => __('Enter your description', 'ababil') ] );
-        $this->add_control( 'button_text', [ 'label' => __('Button Text', 'ababil'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => __('Learn More', 'ababil'), 'placeholder' => __('Read More', 'ababil'), 'separator' => 'before' ] );
-        $this->add_control( 'button_link', [ 'label' => __('Button Link', 'ababil'), 'type' => \Elementor\Controls_Manager::URL, 'placeholder' => __('https://your-link.com', 'ababil'), 'show_external' => true, 'dynamic' => [ 'active' => true ], 'default' => [ 'url' => '#', 'is_external' => false, 'nofollow' => false ] ] );
-        $this->add_control( 'button_icon', [ 'label' => __('Button Icon', 'ababil'), 'type' => \Elementor\Controls_Manager::ICONS ] );
-        $this->add_control( 'button_icon_position', [ 'label' => __('Icon Position', 'ababil'), 'type' => \Elementor\Controls_Manager::SELECT, 'default' => 'right', 'options' => [ 'left' => __('Left', 'ababil'), 'right' => __('Right', 'ababil') ], 'condition' => [ 'button_icon[value]!' => '' ] ] );
-        $this->end_controls_section();
+        // -- Heading Tag
+        $this->add_control(
+            'heading_tag',
+            [
+                'label'   => esc_html__( 'Heading HTML Tag', 'ababil' ),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'h1'   => 'H1',
+                    'h2'   => 'H2',
+                    'h3'   => 'H3',
+                    'h4'   => 'H4',
+                    'h5'   => 'H5',
+                    'h6'   => 'H6',
+                    'div'  => 'div',
+                    'span' => 'span',
+                    'p'    => 'p',
+                ],
+                'default' => 'h3',
+            ]
+        );
 
+        // -- Sub Heading
+        $this->add_control(
+            'sub_heading',
+            [
+                'label'       => __( 'Sub Heading', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::TEXTAREA,
+                'default'     => __( 'This is a subheading for the content box.', 'ababil' ),
+                'placeholder' => __( 'Enter your sub heading', 'ababil' ),
+                'separator'   => 'before',
+            ]
+        );
+        // Add sub heading tag selector
+        $this->add_control(
+            'sub_heading_tag',
+            [
+                'label'   => esc_html__( 'Sub Heading HTML Tag', 'ababil' ),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'h1'   => 'H1',
+                    'h2'   => 'H2',
+                    'h3'   => 'H3',
+                    'h4'   => 'H4',
+                    'h5'   => 'H5',
+                    'h6'   => 'H6',
+                    'div'  => 'div',
+                    'span' => 'span',
+                    'p'    => 'p',
+                ],
+                'default' => 'div',
+                'condition' => [ 'sub_heading!' => '' ],
+            ]
+        );
+
+        // -- Description
+        $this->add_control(
+            'description',
+            [
+                'label'       => __( 'Description', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::WYSIWYG,
+                'default'     => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'ababil' ),
+                'placeholder' => __( 'Enter your description', 'ababil' ),
+            ]
+        );
+
+        // -- Button Controls
+        $this->add_control(
+            'button_text',
+            [
+                'label'       => __( 'Button Text', 'ababil' ),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'default'     => __( 'Learn More', 'ababil' ),
+                'placeholder' => __( 'Read More', 'ababil' ),
+                'separator'   => 'before',
+            ]
+        );
+        $this->add_control(
+            'button_link',
+            [
+                'label'         => __( 'Button Link', 'ababil' ),
+                'type'          => \Elementor\Controls_Manager::URL,
+                'placeholder'   => __( 'https://your-link.com', 'ababil' ),
+                'show_external' => true,
+                'dynamic'       => [ 'active' => true ],
+                'default'       => [
+                    'url'        => '#',
+                    'is_external'=> false,
+                    'nofollow'   => false,
+                ],
+            ]
+        );
+        $this->add_control(
+            'button_icon',
+            [
+                'label' => __( 'Button Icon', 'ababil' ),
+                'type'  => \Elementor\Controls_Manager::ICONS,
+            ]
+        );
+        $this->add_control(
+            'button_icon_position',
+            [
+                'label'     => __( 'Icon Position', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SELECT,
+                'default'   => 'right',
+                'options'   => [
+                    'left'  => __( 'Left', 'ababil' ),
+                    'right' => __( 'Right', 'ababil' ),
+                ],
+                'condition' => [ 'button_icon[value]!' => '' ],
+            ]
+        );
+
+        $this->end_controls_section();
 
         //======================================================================================
         // II. STYLE TAB
         //======================================================================================
-        $this->start_controls_section( 'box_style_section', [ 'label' => __('Box', 'ababil'), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
-        $this->add_responsive_control( 'alignment', [ 'label' => esc_html__( 'Alignment', 'ababil' ), 'type' => \Elementor\Controls_Manager::CHOOSE, 'options' => [ 'left' => [ 'title' => esc_html__( 'Left', 'ababil' ), 'icon' => 'eicon-text-align-left' ], 'center' => [ 'title' => esc_html__( 'Center', 'ababil' ), 'icon' => 'eicon-text-align-center' ], 'right' => [ 'title' => esc_html__( 'Right', 'ababil' ), 'icon' => 'eicon-text-align-right' ] ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box' => 'text-align: {{VALUE}};' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Background::get_type(), [ 'name' => 'box_background', 'selector' => '{{WRAPPER}} .ababil-content-box' ] );
-        $this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'box_border', 'selector' => '{{WRAPPER}} .ababil-content-box' ] );
-        $this->add_responsive_control( 'box_border_radius', [ 'label' => __('Border Radius', 'ababil'), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .ababil-content-box' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ]);
-        $this->add_group_control( \Elementor\Group_Control_Box_Shadow::get_type(), [ 'name' => 'box_shadow', 'selector' => '{{WRAPPER}} .ababil-content-box' ] );
-        $this->add_responsive_control( 'box_padding', [ 'label' => __('Padding', 'ababil'), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%', 'em'], 'selectors' => [ '{{WRAPPER}} .ababil-content-box' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ]);
+
+        // -- Box Style
+        $this->start_controls_section(
+            'box_style_section',
+            [
+                'label' => __( 'Box', 'ababil' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+        $this->add_responsive_control(
+            'alignment',
+            [
+                'label'     => esc_html__( 'Alignment', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::CHOOSE,
+                'options'   => [
+                    'left'   => [ 'title' => esc_html__( 'Left', 'ababil' ),   'icon' => 'eicon-text-align-left' ],
+                    'center' => [ 'title' => esc_html__( 'Center', 'ababil' ), 'icon' => 'eicon-text-align-center' ],
+                    'right'  => [ 'title' => esc_html__( 'Right', 'ababil' ),  'icon' => 'eicon-text-align-right' ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box' => 'text-align: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name'     => 'box_background',
+                'selector' => '{{WRAPPER}} .ababil-content-box',
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'box_border',
+                'selector' => '{{WRAPPER}} .ababil-content-box',
+            ]
+        );
+        $this->add_responsive_control(
+            'box_border_radius',
+            [
+                'label'      => __( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'box_shadow',
+                'selector' => '{{WRAPPER}} .ababil-content-box',
+            ]
+        );
+        $this->add_responsive_control(
+            'box_padding',
+            [
+                'label'      => __( 'Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
         $this->end_controls_section();
 
-        $this->start_controls_section( 'graphic_style_section', [ 'label' => __('Icon & Image', 'ababil'), 'tab' => \Elementor\Controls_Manager::TAB_STYLE, 'condition' => [ 'graphic_element!' => 'none' ] ] );
-        $this->add_responsive_control( 'graphic_spacing', [ 'label' => esc_html__( 'Spacing', 'ababil' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-graphic' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
-        $this->add_control( 'icon_style_heading', [ 'label' => esc_html__( 'Icon', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before', 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_control( 'icon_bg_color', [ 'label' => __('Background Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-icon' => 'background-color: {{VALUE}};' ], 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_control( 'icon_color', [ 'label' => __('Icon Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-icon i' => 'color: {{VALUE}};', '{{WRAPPER}} .ababil-content-box-icon svg' => 'fill: {{VALUE}};' ], 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_responsive_control( 'icon_box_size', [ 'label' => __('Box Size', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 20, 'max' => 200 ] ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-icon' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; display: inline-flex; align-items: center; justify-content: center;' ], 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_responsive_control( 'icon_size', [ 'label' => __('Icon Size', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ], 'default' => [ 'unit' => 'px', 'size' => 30 ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-icon i' => 'font-size: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .ababil-content-box-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'icon_border', 'selector' => '{{WRAPPER}} .ababil-content-box-icon', 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_responsive_control( 'icon_border_radius', [ 'label' => esc_html__( 'Border Radius', 'ababil' ), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', '%' ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => [ 'graphic_element' => 'icon' ] ] );
-        $this->add_control( 'image_style_heading', [ 'label' => esc_html__( 'Image', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before', 'condition' => [ 'graphic_element' => 'image' ] ] );
-        $this->add_responsive_control( 'image_width', [ 'label' => __('Width', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-image img' => 'width: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'graphic_element' => 'image' ] ] );
-        $this->add_responsive_control( 'image_height', [ 'label' => __('Height', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => ['px', 'vh'], 'range' => [ 'px' => [ 'min' => 20, 'max' => 1000 ], 'vh' => [ 'min' => 1, 'max' => 100 ] ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-image img' => 'height: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'graphic_element' => 'image' ] ] );
-        $this->add_control( 'image_object_fit', [ 'label' => esc_html__( 'Object Fit', 'ababil' ), 'type' => \Elementor\Controls_Manager::SELECT, 'options' => [ '' => esc_html__( 'Default', 'ababil' ), 'fill' => esc_html__( 'Fill', 'ababil' ), 'cover' => esc_html__( 'Cover', 'ababil' ), 'contain' => esc_html__( 'Contain', 'ababil' ) ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-image img' => 'object-fit: {{VALUE}};' ], 'condition' => [ 'graphic_element' => 'image' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'image_border', 'selector' => '{{WRAPPER}} .ababil-content-box-image img', 'condition' => [ 'graphic_element' => 'image' ] ] );
-        $this->add_responsive_control( 'image_border_radius', [ 'label' => __('Border Radius', 'ababil'), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => ['px', '%'], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ], 'condition' => [ 'graphic_element' => 'image' ] ] );
+        // -- Icon & Image Style
+        $this->start_controls_section(
+            'graphic_style_section',
+            [
+                'label'     => __( 'Icon & Image', 'ababil' ),
+                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [ 'graphic_element!' => 'none' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'graphic_spacing',
+            [
+                'label'     => esc_html__( 'Spacing', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-graphic' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'icon_style_heading',
+            [
+                'label'     => esc_html__( 'Icon', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_control(
+            'icon_bg_color',
+            [
+                'label'     => __( 'Background Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-icon' => 'background-color: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_control(
+            'icon_color',
+            [
+                'label'     => __( 'Icon Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-icon i'   => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .ababil-content-box-icon svg' => 'fill: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'icon_box_size',
+            [
+                'label'     => __( 'Box Size', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'range'     => [ 'px' => [ 'min' => 20, 'max' => 200 ] ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-icon' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; display: inline-flex; align-items: center; justify-content: center;',
+                ],
+                'condition' => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'icon_size',
+            [
+                'label'     => __( 'Icon Size', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'range'     => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
+                'default'   => [ 'unit' => 'px', 'size' => 30 ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-icon i'   => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-content-box-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'icon_border',
+                'selector' => '{{WRAPPER}} .ababil-content-box-icon',
+                'condition'=> [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'icon_border_radius',
+            [
+                'label'      => esc_html__( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'graphic_element' => 'icon' ],
+            ]
+        );
+        $this->add_control(
+            'image_style_heading',
+            [
+                'label'     => esc_html__( 'Image', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'image_width',
+            [
+                'label'     => __( 'Width', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'size_units'=> [ 'px', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'image_height',
+            [
+                'label'     => __( 'Height', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'size_units'=> [ 'px', 'vh' ],
+                'range'     => [
+                    'px' => [ 'min' => 20, 'max' => 1000 ],
+                    'vh' => [ 'min' => 1, 'max' => 100 ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_control(
+            'image_object_fit',
+            [
+                'label'     => esc_html__( 'Object Fit', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SELECT,
+                'options'   => [
+                    ''       => esc_html__( 'Default', 'ababil' ),
+                    'fill'   => esc_html__( 'Fill', 'ababil' ),
+                    'cover'  => esc_html__( 'Cover', 'ababil' ),
+                    'contain'=> esc_html__( 'Contain', 'ababil' ),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'object-fit: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'image_border',
+                'selector' => '{{WRAPPER}} .ababil-content-box-image img',
+                'condition'=> [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'image_border_radius',
+            [
+                'label'      => __( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'graphic_element' => 'image' ],
+            ]
+        );
         $this->end_controls_section();
 
-        $this->start_controls_section( 'content_style_section', [ 'label' => __('Content', 'ababil'), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
-        $this->add_control( 'badge_style_heading', [ 'label' => esc_html__( 'Badge', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'condition' => [ 'badge_text!' => '' ] ] );
-        $this->add_control( 'badge_color', [ 'label' => __('Text Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-badge' => 'color: {{VALUE}};' ], 'condition' => [ 'badge_text!' => '' ] ]);
-        $this->add_control( 'badge_bg_color', [ 'label' => __('Background Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-badge' => 'background-color: {{VALUE}};' ], 'condition' => [ 'badge_text!' => '' ] ]);
-        $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'badge_typography', 'selector' => '{{WRAPPER}} .ababil-content-box-badge', 'condition' => [ 'badge_text!' => '' ] ] );
-        $this->add_responsive_control( 'badge_spacing', [ 'label' => __('Spacing', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-badge' => 'margin-bottom: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'badge_text!' => '' ] ] );
-        $this->add_control( 'heading_style_heading', [ 'label' => esc_html__( 'Heading', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before' ] );
-        $this->add_responsive_control( 'heading_spacing', [ 'label' => __('Spacing', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-heading' => 'margin-bottom: {{SIZE}}{{UNIT}};' ] ] );
-        $this->add_control( 'sub_heading_style_heading', [ 'label' => esc_html__( 'Sub Heading', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before', 'condition' => [ 'sub_heading!' => '' ] ] );
-        $this->add_control( 'sub_heading_color', [ 'label' => __('Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-subheading' => 'color: {{VALUE}};' ], 'condition' => [ 'sub_heading!' => '' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'sub_heading_typography', 'selector' => '{{WRAPPER}} .ababil-content-box-subheading', 'condition' => [ 'sub_heading!' => '' ] ] );
-        $this->add_responsive_control( 'sub_heading_spacing', [ 'label' => __('Spacing', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-subheading' => 'margin-bottom: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'sub_heading!' => '' ] ] );
-        $this->add_control( 'description_style_heading', [ 'label' => esc_html__( 'Description', 'ababil' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before', 'condition' => [ 'description!' => '' ] ] );
-        $this->add_control( 'description_color', [ 'label' => __('Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-description' => 'color: {{VALUE}};' ], 'condition' => [ 'description!' => '' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'description_typography', 'selector' => '{{WRAPPER}} .ababil-content-box-description', 'condition' => [ 'description!' => '' ] ] );
-        $this->add_responsive_control( 'description_spacing', [ 'label' => __('Spacing', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-description' => 'margin-bottom: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'description!' => '' ] ] );
+        // -- Content Style (Badge, Heading, Subheading, Description)
+        $this->start_controls_section(
+            'content_style_section',
+            [
+                'label' => __( 'Content', 'ababil' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        // Badge Style Controls (with tabs at the top)
+        $this->add_control(
+            'badge_style_heading',
+            [
+                'label'     => esc_html__( 'Badge', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+
+        // Badge width selection control
+        $this->add_control(
+            'badge_width_type',
+            [
+                'label' => __( 'Badge Width', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    '' => __( 'Default (auto)', 'ababil' ),
+                    'fit-content' => __( 'Fit Content', 'ababil' ),
+                    'full' => __( 'Full Width', 'ababil' ),
+                    'inline' => __( 'Inline Auto', 'ababil' ),
+                    'custom' => __( 'Custom', 'ababil' ),
+                ],
+                'default' => 'fit-content',
+                'condition' => [ 'badge_text!' => '' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'width: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_responsive_control(
+            'badge_width_custom',
+            [
+                'label' => __( 'Custom Width', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', '%', 'em', 'vw' ],
+                'range' => [
+                    'px' => [ 'min' => 10, 'max' => 1000 ],
+                    '%' => [ 'min' => 1, 'max' => 100 ],
+                    'em' => [ 'min' => 1, 'max' => 50 ],
+                    'vw' => [ 'min' => 1, 'max' => 100 ],
+                ],
+                'condition' => [
+                    'badge_text!' => '',
+                    'badge_width_type' => 'custom',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+        // Add width CSS for each option
+        $this->add_control(
+            'badge_width_css_helper',
+            [
+                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'raw' => '',
+                'content_classes' => 'elementor-hidden',
+                'condition' => [ 'badge_text!' => '' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 
+                        '{{badge_width_type:fit-content}}width:fit-content;{{/badge_width_type}}' .
+                        '{{badge_width_type:full}}width:100%;display:block;{{/badge_width_type}}' .
+                        '{{badge_width_type:inline}}width:auto;display:inline-block;{{/badge_width_type}}',
+                ],
+            ]
+        );
+
+        // Start badge tabs before normal controls
+        $this->start_controls_tabs( 'badge_tabs', [ 'condition' => [ 'badge_text!' => '' ] ] );
+
+        // Normal tab
+        $this->start_controls_tab(
+            'badge_normal_tab',
+            [
+                'label' => __( 'Normal', 'ababil' ),
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_control(
+            'badge_color',
+            [
+                'label'     => __( 'Text Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'color: {{VALUE}};',
+                ],
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_control(
+            'badge_bg_color',
+            [
+                'label'     => __( 'Background Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'background-color: {{VALUE}};',
+                ],
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'badge_typography',
+                'selector' => '{{WRAPPER}} .ababil-content-box-badge',
+                'condition'=> [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'badge_spacing',
+            [
+                'label'     => __( 'Spacing', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'badge_margin',
+            [
+                'label'      => __( 'Margin', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'badge_padding',
+            [
+                'label'      => __( 'Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'badge_border',
+                'selector' => '{{WRAPPER}} .ababil-content-box-badge',
+                'condition'=> [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'badge_border_radius',
+            [
+                'label'      => __( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'badge_box_shadow',
+                'selector' => '{{WRAPPER}} .ababil-content-box-badge',
+                'condition'=> [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->end_controls_tab();
+
+        // Hover tab
+        $this->start_controls_tab(
+            'badge_hover_tab',
+            [
+                'label' => __( 'Hover', 'ababil' ),
+                'condition' => [ 'badge_text!' => '' ],
+            ]
+        );
+        $this->add_control(
+            'badge_color_hover',
+            [
+                'label'     => __( 'Text Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'badge_bg_color_hover',
+            [
+                'label'     => __( 'Background Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'badge_border_color_hover',
+            [
+                'label'     => __( 'Border Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge:hover' => 'border-color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'badge_box_shadow_hover',
+                'selector' => '{{WRAPPER}} .ababil-content-box-badge:hover',
+            ]
+        );
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+        // Heading Style Controls
+        $this->add_control(
+            'heading_style_heading',
+            [
+                'label'     => esc_html__( 'Heading', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+        $this->add_responsive_control(
+            'heading_spacing',
+            [
+                'label'     => __( 'Spacing', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-heading' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Sub Heading Style Controls
+        $this->add_control(
+            'sub_heading_style_heading',
+            [
+                'label'     => esc_html__( 'Sub Heading', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [ 'sub_heading!' => '' ],
+            ]
+        );
+        $this->add_control(
+            'sub_heading_color',
+            [
+                'label'     => __( 'Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-subheading' => 'color: {{VALUE}};',
+                ],
+                'condition' => [ 'sub_heading!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'sub_heading_typography',
+                'selector' => '{{WRAPPER}} .ababil-content-box-subheading',
+                'condition' => [ 'sub_heading!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'sub_heading_spacing',
+            [
+                'label'     => __( 'Spacing', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-subheading' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'sub_heading!' => '' ],
+            ]
+        );
+
+        // Description Style Controls
+        $this->add_control(
+            'description_style_heading',
+            [
+                'label'     => esc_html__( 'Description', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [ 'description!' => '' ],
+            ]
+        );
+        $this->add_control(
+            'description_color',
+            [
+                'label'     => __( 'Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-description' => 'color: {{VALUE}};',
+                ],
+                'condition' => [ 'description!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'description_typography',
+                'selector' => '{{WRAPPER}} .ababil-content-box-description',
+                'condition' => [ 'description!' => '' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'description_spacing',
+            [
+                'label'     => __( 'Spacing', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-description' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'description!' => '' ],
+            ]
+        );
         $this->end_controls_section();
 
         // -- Style Tab: Button
-        $this->start_controls_section( 'button_style_section', [ 'label' => __('Button', 'ababil'), 'tab' => \Elementor\Controls_Manager::TAB_STYLE, 'condition' => [ 'button_text!' => '' ] ] );
-        $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'button_typography', 'selector' => '{{WRAPPER}} .ababil-content-box-button' ] );
-        $this->start_controls_tabs('button_tabs');
-        $this->start_controls_tab( 'button_normal_tab', [ 'label' => __('Normal', 'ababil') ] );
-        $this->add_control( 'button_text_color', [ 'label' => __('Text Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'button_bg_color', [ 'label' => __('Background Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button' => 'background-color: {{VALUE}};' ] ] );
+        $this->start_controls_section(
+            'button_style_section',
+            [
+                'label' => __( 'Button', 'ababil' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [ 'button_text!' => '' ],
+            ]
+        );
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'button_typography',
+                'selector' => '{{WRAPPER}} .ababil-content-box-button',
+            ]
+        );
+        $this->start_controls_tabs( 'button_tabs' );
+        $this->start_controls_tab( 'button_normal_tab', [ 'label' => __( 'Normal', 'ababil' ) ] );
+        $this->add_control(
+            'button_text_color',
+            [
+                'label'     => __( 'Text Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'button_bg_color',
+            [
+                'label'     => __( 'Background Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
         $this->end_controls_tab();
-        $this->start_controls_tab( 'button_hover_tab', [ 'label' => __('Hover', 'ababil') ] );
-        $this->add_control( 'button_text_color_hover', [ 'label' => __('Text Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button:hover' => 'color: {{VALUE}};' ] ] );
-        $this->add_control( 'button_bg_color_hover', [ 'label' => __('Background Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button:hover' => 'background-color: {{VALUE}};' ] ] );
-        $this->add_control( 'button_border_color_hover', [ 'label' => __('Border Color', 'ababil'), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button:hover' => 'border-color: {{VALUE}};' ] ] );
+        $this->start_controls_tab( 'button_hover_tab', [ 'label' => __( 'Hover', 'ababil' ) ] );
+        $this->add_control(
+            'button_text_color_hover',
+            [
+                'label'     => __( 'Text Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'button_bg_color_hover',
+            [
+                'label'     => __( 'Background Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+        $this->add_control(
+            'button_border_color_hover',
+            [
+                'label'     => __( 'Border Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button:hover' => 'border-color: {{VALUE}};',
+                ],
+            ]
+        );
         $this->end_controls_tab();
         $this->end_controls_tabs();
-        $this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'button_border', 'selector' => '{{WRAPPER}} .ababil-content-box-button', 'separator' => 'before' ] );
-        $this->add_responsive_control( 'button_border_radius', [ 'label' => __('Border Radius', 'ababil'), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
-        
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'button_border',
+                'selector' => '{{WRAPPER}} .ababil-content-box-button',
+                'separator' => 'before',
+            ]
+        );
+        $this->add_responsive_control(
+            'button_border_radius',
+            [
+                'label'      => __( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
         // -- THE FIX: Modified this control to handle icon size and alignment
         $this->add_responsive_control(
             'button_padding',
             [
-                'label' => __('Padding', 'ababil'),
+                'label' => __( 'Padding', 'ababil' ),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors' => [
@@ -281,17 +1010,32 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 ],
             ]
         );
-        $this->add_responsive_control( 'button_icon_spacing', [ 'label' => __('Icon Spacing', 'ababil'), 'type' => \Elementor\Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'max' => 50 ] ], 'selectors' => [ '{{WRAPPER}} .ababil-content-box-button .icon-left' => 'margin-right: {{SIZE}}{{UNIT}};', '{{WRAPPER}} .ababil-content-box-button .icon-right' => 'margin-left: {{SIZE}}{{UNIT}};' ], 'condition' => [ 'button_icon[value]!' => '' ] ] );
+        $this->add_responsive_control(
+            'button_icon_spacing',
+            [
+                'label' => __( 'Icon Spacing', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'range' => [ 'px' => [ 'max' => 50 ] ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button .icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-content-box-button .icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'button_icon[value]!' => '' ],
+            ]
+        );
 
         $this->end_controls_section();
     }
 
-    // The render() and content_template() methods remain unchanged from the previous correct version.
+    /**
+     * Render widget output on the frontend
+     */
     protected function render() {
         $settings = $this->get_settings_for_display();
         ?>
         <div class="ababil-content-box">
-            <?php // -- 1. Render Graphic: Icon or Image
+            <?php
+            // -- 1. Render Graphic: Icon or Image
             if ( 'none' !== $settings['graphic_element'] ) : ?>
                 <div class="ababil-content-box-graphic">
                     <?php if ( 'icon' === $settings['graphic_element'] && ! empty( $settings['icon']['value'] ) ) : ?>
@@ -305,9 +1049,10 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            
+
             <div class="ababil-content-box-text-wrapper">
-                <?php // -- 2. Render Badge
+                <?php
+                // -- 2. Render Badge
                 if ( ! empty( $settings['badge_text'] ) ) {
                     printf( '<div class="ababil-content-box-badge">%s</div>', esc_html( $settings['badge_text'] ) );
                 }
@@ -325,21 +1070,31 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 }
 
                 // -- 4. Render Sub Heading & Description
-                if ( ! empty( $settings['sub_heading'] ) ) { printf( '<div class="ababil-content-box-subheading">%s</div>', wp_kses_post( $settings['sub_heading'] ) ); }
-                if ( ! empty( $settings['description'] ) ) { printf( '<div class="ababil-content-box-description">%s</div>', wp_kses_post( $settings['description'] ) ); }
+                if ( ! empty( $settings['sub_heading'] ) ) {
+                    $sub_heading_tag = isset($settings['sub_heading_tag']) ? \Elementor\Utils::validate_html_tag($settings['sub_heading_tag']) : 'div';
+                    printf( '<%1$s class="ababil-content-box-subheading">%2$s</%1$s>', esc_attr( $sub_heading_tag ), wp_kses_post( $settings['sub_heading'] ) );
+                }
+                if ( ! empty( $settings['description'] ) ) {
+                    printf( '<div class="ababil-content-box-description">%s</div>', wp_kses_post( $settings['description'] ) );
+                }
 
                 // -- 6. Render Button
                 if ( ! empty( $settings['button_text'] ) && ! empty( $settings['button_link']['url'] ) ) {
                     $this->add_link_attributes( 'button', $settings['button_link'] );
-                    $this->add_render_attribute( 'button', 'class', 'ababil-content-box-button' ); ?>
+                    $this->add_render_attribute( 'button', 'class', 'ababil-content-box-button' );
+                    ?>
                     <div class="ababil-content-box-button-wrapper">
                         <a <?php $this->print_render_attribute_string( 'button' ); ?>>
                             <?php if ( ! empty( $settings['button_icon']['value'] ) && 'left' === $settings['button_icon_position'] ) : ?>
-                                <span class="ababil-button-icon icon-left"><?php \Elementor\Icons_Manager::render_icon( $settings['button_icon'], [ 'aria-hidden' => 'true' ] ); ?></span>
+                                <span class="ababil-button-icon icon-left">
+                                    <?php \Elementor\Icons_Manager::render_icon( $settings['button_icon'], [ 'aria-hidden' => 'true' ] ); ?>
+                                </span>
                             <?php endif; ?>
                             <span class="ababil-button-text"><?php echo esc_html( $settings['button_text'] ); ?></span>
                             <?php if ( ! empty( $settings['button_icon']['value'] ) && 'right' === $settings['button_icon_position'] ) : ?>
-                                <span class="ababil-button-icon icon-right"><?php \Elementor\Icons_Manager::render_icon( $settings['button_icon'], [ 'aria-hidden' => 'true' ] ); ?></span>
+                                <span class="ababil-button-icon icon-right">
+                                    <?php \Elementor\Icons_Manager::render_icon( $settings['button_icon'], [ 'aria-hidden' => 'true' ] ); ?>
+                                </span>
                             <?php endif; ?>
                         </a>
                     </div>
@@ -349,24 +1104,28 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         <?php
     }
 
+    /**
+     * Render widget output in the editor (JS template)
+     */
     protected function content_template() {
         ?>
         <#
         var headingTag = elementor.helpers.validateHTMLTag( settings.heading_tag || 'h3' );
+        var subHeadingTag = elementor.helpers.validateHTMLTag( settings.sub_heading_tag || 'div' );
         #>
         <div class="ababil-content-box">
             <# if ( 'none' !== settings.graphic_element ) { #>
                 <div class="ababil-content-box-graphic">
-                <# if ( 'icon' === settings.graphic_element && settings.icon.value ) { #>
-                    <span class="ababil-content-box-icon">
-                        <# var iconHTML = elementor.helpers.renderIcon( view, settings.icon, { 'aria-hidden': true }, 'i' , 'object' ); #>
-                        {{{ iconHTML.value }}}
-                    </span>
-                <# } else if ( 'image' === settings.graphic_element && settings.image.url ) { #>
-                    <span class="ababil-content-box-image">
-                        <img src="{{{ settings.image.url }}}" alt="">
-                    </span>
-                <# } #>
+                    <# if ( 'icon' === settings.graphic_element && settings.icon.value ) { #>
+                        <span class="ababil-content-box-icon">
+                            <# var iconHTML = elementor.helpers.renderIcon( view, settings.icon, { 'aria-hidden': true }, 'i' , 'object' ); #>
+                            {{{ iconHTML.value }}}
+                        </span>
+                    <# } else if ( 'image' === settings.graphic_element && settings.image.url ) { #>
+                        <span class="ababil-content-box-image">
+                            <img src="{{{ settings.image.url }}}" alt="">
+                        </span>
+                    <# } #>
                 </div>
             <# } #>
 
@@ -384,7 +1143,7 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 <# } #>
 
                 <# if ( settings.sub_heading ) { #>
-                    <div class="ababil-content-box-subheading">{{{ settings.sub_heading }}}</div>
+                    <{{ subHeadingTag }} class="ababil-content-box-subheading">{{{ settings.sub_heading }}}</{{ subHeadingTag }}>
                 <# } #>
 
                 <# if ( settings.description ) { #>

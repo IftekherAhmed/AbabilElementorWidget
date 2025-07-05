@@ -1,4 +1,4 @@
-/* Only structural styles - no visual defaults */
+/* Style Text Widget  */
 .ababil-styled-text-container {
     display: inline-block;
     width: 100%;
@@ -7,3 +7,6 @@
 .ababil-text-segment {
     display: inline;
 }
+
+
+/* Content Box Widget */
