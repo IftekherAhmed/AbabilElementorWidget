@@ -29,6 +29,10 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/content-box.php' );
     $widgets_manager->register( new \Ababil_Content_Box_Widget() );
+    
+    // Add the new ACF Repeater Accordion widget
+    require_once( __DIR__ . '/widgets/acf-repeater-accordion.php' );
+    $widgets_manager->register( new \Ababil_ACF_Repeater_Accordion_Widget() );
 }
 
 // Register assets (CSS)

@@ -10,3 +10,15 @@
 
 
 /* Content Box Widget */
+
+
+/* Accordion Widget Styles */
+.ababil-acf-accordion-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.ababil-acf-accordion-icon-wrapper {
+    display: flex;
+    align-items: center;
+}
