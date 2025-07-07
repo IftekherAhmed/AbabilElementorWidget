@@ -780,17 +780,35 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
                 
                 <div class="<?php echo implode(' ', $item_classes); ?>">
                     <<?php echo esc_attr($settings['title_html_tag']); ?> class="ababil-acf-accordion-title <?php echo $is_active ? 'active' : ''; ?>">
-                        <?php if ($settings['icon_position'] === 'left') {
-                            if ($icon_html) echo '<span class="ababil-acf-accordion-icon-wrapper">' . $icon_html . '</span>';
-                            if ($active_icon_html) echo '<span class="ababil-acf-accordion-icon-wrapper">' . $active_icon_html . '</span>';
-                        } ?>
+                        <?php if ($settings['icon_position'] === 'left') : ?>
+                            <span class="ababil-acf-accordion-icon-wrapper">
+                                <?php
+                                // Both icons inside one wrapper
+                                if ($icon_html) {
+                                    echo '<span class="ababil-acf-accordion-icon ababil-acf-accordion-icon-normal"' . ($is_active ? ' style="display:none;"' : '') . '>' . $icon_html . '</span>';
+                                }
+                                if ($active_icon_html) {
+                                    echo '<span class="ababil-acf-accordion-icon ababil-acf-accordion-icon-active"' . ($is_active ? '' : ' style="display:none;"') . '>' . $active_icon_html . '</span>';
+                                }
+                                ?>
+                            </span>
+                        <?php endif; ?>
                         
                         <span class="ababil-acf-accordion-title-text"><?php echo esc_html($title); ?></span>
                         
-                        <?php if ($settings['icon_position'] === 'right') {
-                            if ($icon_html) echo '<span class="ababil-acf-accordion-icon-wrapper">' . $icon_html . '</span>';
-                            if ($active_icon_html) echo '<span class="ababil-acf-accordion-icon-wrapper">' . $active_icon_html . '</span>';
-                        } ?>
+                        <?php if ($settings['icon_position'] === 'right') : ?>
+                            <span class="ababil-acf-accordion-icon-wrapper">
+                                <?php
+                                // Both icons inside one wrapper
+                                if ($icon_html) {
+                                    echo '<span class="ababil-acf-accordion-icon ababil-acf-accordion-icon-normal"' . ($is_active ? ' style="display:none;"' : '') . '>' . $icon_html . '</span>';
+                                }
+                                if ($active_icon_html) {
+                                    echo '<span class="ababil-acf-accordion-icon ababil-acf-accordion-icon-active"' . ($is_active ? '' : ' style="display:none;"') . '>' . $active_icon_html . '</span>';
+                                }
+                                ?>
+                            </span>
+                        <?php endif; ?>
                     </<?php echo esc_attr($settings['title_html_tag']); ?>>
                     
                     <div class="ababil-acf-accordion-content" <?php echo $is_active ? '' : 'style="display: none;"'; ?>>
