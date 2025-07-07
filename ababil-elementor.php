@@ -39,7 +39,19 @@ function ababil_register_widgets( $widgets_manager ) {
 add_action( 'elementor/frontend/after_register_styles', function() {
     wp_register_style(
         'ababil-styled-text',
-        plugins_url( '/assets/css/frontend.css', __FILE__ ),
+        plugins_url( '/assets/css/styled-text.css', __FILE__ ),
+        [],
+        '1.0.0'
+    );
+    wp_register_style(
+        'ababil-content-box',
+        plugins_url( '/assets/css/content-box.css', __FILE__ ),
+        [],
+        '1.0.0'
+    );
+    wp_register_style(
+        'ababil-acf-repeater-accordion',
+        plugins_url( '/assets/css/acf-repeater-accordion.css', __FILE__ ),
         [],
         '1.0.0'
     );
@@ -49,7 +61,21 @@ add_action( 'elementor/frontend/after_register_styles', function() {
 add_action( 'elementor/frontend/after_register_scripts', function() {
     wp_register_script(
         'ababil-styled-text',
-        plugins_url( '/assets/js/frontend.js', __FILE__ ),
+        plugins_url( '/assets/js/styled-text.js', __FILE__ ),
+        [ 'jquery' ],
+        '1.0.0',
+        true
+    );
+    wp_register_script(
+        'ababil-content-box',
+        plugins_url( '/assets/js/content-box.js', __FILE__ ),
+        [ 'jquery' ],
+        '1.0.0',
+        true
+    );
+    wp_register_script(
+        'ababil-acf-repeater-accordion',
+        plugins_url( '/assets/js/acf-repeater-accordion.js', __FILE__ ),
         [ 'jquery' ],
         '1.0.0',
         true

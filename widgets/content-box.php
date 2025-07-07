@@ -29,6 +29,14 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         return [ 'info box', 'feature', 'icon box', 'content', 'ababil' ];
     }
 
+    public function get_style_depends() {
+        return [ 'ababil-content-box' ];
+    }
+
+    public function get_script_depends() {
+        return [ 'ababil-content-box' ];
+    }
+
     /**
      * Register widget controls
      */

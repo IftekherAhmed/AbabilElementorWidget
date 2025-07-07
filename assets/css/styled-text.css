@@ -7,13 +7,3 @@
 .ababil-text-segment {
     display: inline;
 }
-
-
-/* Content Box Widget */
-
-
-/* Accordion Widget Styles */
-.ababil-acf-accordion-title {
-    display: flex;
-    justify-content: space-between;
-}

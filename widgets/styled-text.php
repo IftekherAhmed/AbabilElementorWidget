@@ -25,6 +25,10 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
         return [ 'ababil-styled-text' ];
     }
 
+    public function get_script_depends() {
+        return [ 'ababil-styled-text' ];
+    }
+
     /**
      * Register widget controls
      */

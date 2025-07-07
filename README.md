@@ -1,49 +1,71 @@
-# Ababil Elementor Widget Plugin
+# Ababil Elementor Widgets
 
-Ababil Elementor is a custom WordPress plugin that extends the Elementor page builder with unique, stylish widgets. This plugin is designed to help you create beautiful, interactive, and modern websites with ease.
+Ababil Elementor is a custom WordPress plugin that extends the Elementor page builder with a collection of unique, modern, and flexible widgets. It is designed to help you create beautiful, interactive, and professional websites with ease.
 
 ## Features
 
-- **Custom Widgets:** Includes widgets like Styled Text for enhanced content presentation.
-- **Modern Design:** CSS and JS enhancements for smooth, interactive user experiences.
-- **Easy Integration:** Seamlessly integrates with Elementor and WordPress.
-- **Lightweight:** Minimal code for fast performance.
+- **Multiple Custom Widgets:**  
+  Includes widgets such as Styled Text, Content Box, and ACF Repeater Accordion for advanced layouts and dynamic content.
+- **Separation of Resources:**  
+  Each widget has its own CSS and JS for better performance and maintainability.
+- **Modern Design:**  
+  Clean, responsive, and customizable styles for all widgets.
+- **Easy Integration:**  
+  Seamlessly integrates with Elementor and WordPress.
+- **Lightweight:**  
+  Minimal code and optimized assets for fast performance.
+- **ACF Integration:**  
+  Use Advanced Custom Fields (ACF) repeater fields directly in your Elementor designs.
 
 ## Installation
 
 1. Download or clone this repository to your local machine.
-2. Copy the `ababil-elementor` folder to your WordPress site's `wp-content/plugins/` directory.
-3. In your WordPress admin dashboard, go to **Plugins** and activate **Ababil Elementor**.
+2. Copy the `AbabilElementorWidget` folder to your WordPress site's `wp-content/plugins/` directory.
+3. In your WordPress admin dashboard, go to **Plugins** and activate **Ababil Elementor Widgets**.
 
 ## Usage
 
-1. Make sure Elementor is installed and activated.
+1. Make sure Elementor (and ACF for dynamic widgets) is installed and activated.
 2. After activating this plugin, go to any page or post and edit with Elementor.
-3. Find the new widgets (e.g., **Styled Text**) in the Elementor panel under the "Ababil" section.
-4. Drag and drop the widget onto your page and customize as needed.
+3. Find the new widgets (e.g., **Styled Text**, **Content Box**, **ACF Repeater Accordion**) in the Elementor panel under the "Ababil" section.
+4. Drag and drop the widgets onto your page and customize as needed.
 
 ## File Structure
 
 ```
 assets/
   css/
-    frontend.css      # Custom styles for widgets
+    styled-text.css           # CSS for Styled Text widget
+    content-box.css           # CSS for Content Box widget
+    acf-repeater-accordion.css# CSS for ACF Repeater Accordion widget
   js/
-    frontend.js       # Custom JavaScript for interactivity
+    styled-text.js            # JS for Styled Text widget
+    content-box.js            # JS for Content Box widget
+    acf-repeater-accordion.js # JS for ACF Repeater Accordion widget
 widgets/
-  styled-text.php     # Example custom widget
-ababil-elementor.php  # Main plugin file
+  styled-text.php             # Styled Text widget PHP
+  content-box.php             # Content Box widget PHP
+  acf-repeater-accordion.php  # ACF Repeater Accordion widget PHP
+ababil-elementor.php          # Main plugin file
 ```
 
 ## Customization
 
-- **CSS:** Edit `assets/css/frontend.css` to change widget styles.
-- **JavaScript:** Edit `assets/js/frontend.js` to add or modify interactivity.
-- **Widgets:** Add new PHP files in the `widgets/` directory to create more widgets.
+- **CSS:**  
+  Edit the relevant file in `assets/css/` to change widget styles.
+- **JavaScript:**  
+  Edit the relevant file in `assets/js/` to add or modify widget interactivity.
+- **Widgets:**  
+  Add new PHP files in the `widgets/` directory to create more widgets.
 
-## Example Widget: Styled Text
+## Example Widgets
 
-The **Styled Text** widget lets you add visually appealing text segments with hover effects. You can further customize the style and animation in the CSS and JS files.
+- **Styled Text:**  
+  Add visually appealing text segments with hover effects and advanced styling.
+- **Content Box:**  
+  Create flexible content boxes with icons, images, headings, badges, and buttons.
+- **ACF Repeater Accordion:**  
+  Display dynamic accordion content from ACF repeater fields, perfect for FAQs and more.
 
 ## Contributing
 
@@ -55,4 +77,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-**Ababil Elementor** — Make your Elementor pages stand out with custom widgets!
+**Ababil Elementor Widgets** — Make your Elementor pages stand out with custom widgets!

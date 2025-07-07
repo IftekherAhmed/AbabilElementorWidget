@@ -24,6 +24,14 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
         return [ 'accordion', 'repeater', 'acf', 'faq', 'toggle', 'ababil' ];
     }
 
+    public function get_style_depends() {
+        return [ 'ababil-acf-repeater-accordion' ];
+    }
+
+    public function get_script_depends() {
+        return [ 'ababil-acf-repeater-accordion' ];
+    }
+
     /**
      * Register widget controls
      */
@@ -818,46 +826,6 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
                 
             <?php endwhile; ?>
         </div>
-        
-        <script>
-        jQuery(document).ready(function($) {
-            var accordionID = '<?php echo $accordion_id; ?>';
-            var behavior = '<?php echo $settings['accordion_behavior']; ?>';
-            
-            $('#' + accordionID + ' .ababil-acf-accordion-title').on('click', function() {
-                var $title = $(this);
-                var $item = $title.closest('.ababil-acf-accordion-item');
-                var $content = $item.find('.ababil-acf-accordion-content');
-                var $iconNormal = $item.find('.ababil-acf-accordion-icon-normal');
-                var $iconActive = $item.find('.ababil-acf-accordion-icon-active');
-                
-                if (behavior === 'accordion') {
-                    // Close all other items
-                    $('#' + accordionID + ' .ababil-acf-accordion-item').not($item).removeClass('active');
-                    $('#' + accordionID + ' .ababil-acf-accordion-content').not($content).slideUp();
-                    $('#' + accordionID + ' .ababil-acf-accordion-title').not($title).removeClass('active');
-                    
-                    // Show normal icons for all other items
-                    $('#' + accordionID + ' .ababil-acf-accordion-icon-normal').not($iconNormal).css('display', 'inline-flex');
-                    $('#' + accordionID + ' .ababil-acf-accordion-icon-active').not($iconActive).css('display', 'none');
-                }
-                
-                // Toggle current item
-                $item.toggleClass('active');
-                $content.slideToggle();
-                $title.toggleClass('active');
-                
-                // Toggle icons for current item
-                if ($item.hasClass('active')) {
-                    $iconNormal.css('display', 'none');
-                    $iconActive.css('display', 'inline-flex');
-                } else {
-                    $iconNormal.css('display', 'inline-flex');
-                    $iconActive.css('display', 'none');
-                }
-            });
-        });
-        </script>
         <?php
     }
 
