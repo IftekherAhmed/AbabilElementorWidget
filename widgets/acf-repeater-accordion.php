@@ -214,6 +214,26 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Add border style control
+        $this->add_control(
+            'border_style',
+            [
+                'label' => __( 'Border Style', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'none' => __( 'None', 'ababil' ),
+                    'solid' => __( 'Solid', 'ababil' ),
+                    'dashed' => __( 'Dashed', 'ababil' ),
+                    'dotted' => __( 'Dotted', 'ababil' ),
+                    'double' => __( 'Double', 'ababil' ),
+                ],
+                'default' => 'solid',
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-acf-accordion-item' => 'border-style: {{VALUE}};',
+                ],
+            ]
+        );
+
         $this->add_control(
             'border_width',
             [
@@ -472,10 +492,12 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Remove icon_box_size (Icon Size) control
+        // Add a new "Size" control for icon font-size/SVG width
         $this->add_responsive_control(
-            'icon_box_size',
+            'icon_size',
             [
-                'label' => __( 'Icon Size', 'ababil' ),
+                'label' => __( 'Size', 'ababil' ),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => [ 'px', 'em', 'rem' ],
                 'range' => [
@@ -486,8 +508,10 @@ class Ababil_ACF_Repeater_Accordion_Widget extends \Elementor\Widget_Base {
                     'size' => 16,
                 ],
                 'selectors' => [
-                    // Only set SVG width, not height or font-size
-                    '{{WRAPPER}} .ababil-acf-accordion-icon svg' => 'width: {{SIZE}}{{UNIT}};',
+                    // For SVG icons
+                    '{{WRAPPER}} .ababil-acf-accordion-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                    // For font icons
+                    '{{WRAPPER}} .ababil-acf-accordion-icon' => 'font-size: {{SIZE}}{{UNIT}}; width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
