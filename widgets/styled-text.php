@@ -113,7 +113,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'label'     => __( 'Text Color', 'ababil' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}}',
+                    '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment' => 'color: {{VALUE}}',
                 ],
             ]
         );
@@ -125,7 +125,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'name'     => 'background',
                 'label'    => __( 'Background', 'ababil' ),
                 'types'    => [ 'classic', 'gradient' ],
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment',
             ]
         );
 
@@ -134,7 +134,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'typography',
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment',
             ]
         );
 
@@ -143,7 +143,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Text_Shadow::get_type(),
             [
                 'name'     => 'text_shadow',
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment',
             ]
         );
 
@@ -155,7 +155,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%', 'em' ],
                 'selectors'  => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -168,7 +168,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%', 'em' ],
                 'selectors'  => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -178,7 +178,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Border::get_type(),
             [
                 'name'     => 'border',
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment',
             ]
         );
 
@@ -190,7 +190,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors'  => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -200,7 +200,7 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Box_Shadow::get_type(),
             [
                 'name'     => 'box_shadow',
-                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}.ababil-text-segment',
             ]
         );
 
@@ -231,6 +231,55 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Global Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'global_typography',
+                'label'    => __( 'Global Typography', 'ababil' ),
+                'selector' => '{{WRAPPER}} .ababil-text-segment',
+            ]
+        );
+
+        // Global Color
+        $this->add_control(
+            'global_color',
+            [
+                'label'     => __( 'Global Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-text-segment' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        // Global Margin
+        $this->add_responsive_control(
+            'global_margin',
+            [
+                'label'      => __( 'Global Margin', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-text-segment' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Global Padding
+        $this->add_responsive_control(
+            'global_padding',
+            [
+                'label'      => __( 'Global Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-text-segment' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Alignment
         $this->add_responsive_control(
             'alignment',
             [

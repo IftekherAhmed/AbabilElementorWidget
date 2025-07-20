@@ -1,1 +1,80 @@
 /* Content Box Widget Styles */
+/* assets/css/ababil-content-box.css */
+
+/* Fallback styles for the content box */
+.ababil-content-box {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Fallback styles for the heading */
+.ababil-content-box-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.ababil-content-box-heading span {
+    display: inline-block;
+}
+
+/* Fallback styles for the badge */
+.ababil-content-box-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #0073aa;
+    color: #fff;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+/* Fallback styles for the subheading */
+.ababil-content-box-subheading {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Fallback styles for the description */
+.ababil-content-box-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Fallback styles for the button */
+.ababil-content-box-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #0073aa;
+    color: #fff;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.ababil-content-box-button:hover {
+    background-color: #005177;
+}
+
+/* Fallback styles for the icon */
+.ababil-content-box-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    color: #0073aa;
+    margin-bottom: 15px;
+}
+
+/* Fallback styles for the image */
+.ababil-content-box-image img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
