@@ -723,10 +723,23 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 'content_classes' => 'elementor-hidden',
                 'selectors' => [
                     '{{WRAPPER}} .ababil-content-box-badge' => 
-                        '{{badge_width_type:fit-content}}width:fit-content;{{/badge_width_type}}' .
+                        '{{badge_width_type:fit-content}}width:fit-content;display:inline-block;{{/badge_width_type}}' .
                         '{{badge_width_type:full}}width:100%;display:block;{{/badge_width_type}}' .
-                        '{{badge_width_type:inline}}width:auto;display:inline-block;{{/badge_width_type}}',
+                        '{{badge_width_type:inline}}width:auto;display:inline-block;{{/badge_width_type}}' .
+                        '{{badge_width_type:custom}}display:inline-block;{{/badge_width_type}}',
                 ],
+            ]
+        );
+        $this->add_control(
+            'badge_alignment_helper',
+            [
+                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'raw' => '',
+                'content_classes' => 'elementor-hidden',
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-badge' => 'text-align: inherit;',
+                ],
+                'condition' => [ 'badge_text!' => '' ],
             ]
         );
         $this->start_controls_tabs( 'badge_tabs' );

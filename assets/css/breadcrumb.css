@@ -1,0 +1,23 @@
+.ababil-breadcrumb-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ababil-breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.ababil-breadcrumb-item a {
+    text-decoration: none;
+}
+
+.ababil-breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.ababil-breadcrumb-separator {
+    display: inline-flex;
+    align-items: center;
+}
