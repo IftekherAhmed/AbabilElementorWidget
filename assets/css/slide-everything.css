@@ -1,0 +1,70 @@
+.ababil-slide-everything-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ababil-slide-everything-container .swiper-wrapper {
+    display: flex;
+}
+
+.ababil-slide-everything-container .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ababil-slide-everything-container .swiper-button-prev,
+.ababil-slide-everything-container .swiper-button-next {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+.ababil-slide-everything-container .swiper-button-prev:hover,
+.ababil-slide-everything-container .swiper-button-next:hover {
+    opacity: 0.8;
+}
+
+.ababil-slide-everything-container .swiper-button-prev {
+    left: 10px;
+}
+
+.ababil-slide-everything-container .swiper-button-next {
+    right: 10px;
+}
+
+.ababil-slide-everything-container .swiper-button-prev svg,
+.ababil-slide-everything-container .swiper-button-next svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ababil-slide-everything-container .swiper-button-prev::after,
+.ababil-slide-everything-container .swiper-button-next::after {
+    content: none;
+}
+
+.ababil-slide-everything-container .swiper-pagination {
+    position: absolute;
+    text-align: center;
+    z-index: 10;
+}
+
+.ababil-slide-everything-container .swiper-pagination-bullet {
+    display: inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.ababil-slide-everything-container .swiper-pagination-bullet-active {
+    opacity: 1;
+}

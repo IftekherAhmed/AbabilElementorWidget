@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ababil Elementor Widgets
  * Description: Custom Elementor widgets by Khan Iftekher Ahmed
- * Version: 1.0.1
+ * Version: 1.0.3
  * Author: Khan Iftekher Ahmed
  * Text Domain: ababil
  */
@@ -35,6 +35,9 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/breadcrumb.php' );
     $widgets_manager->register( new \Ababil_Breadcrumb_Widget() );
+
+    require_once( __DIR__ . '/widgets/slide-everything.php' );
+    $widgets_manager->register( new \Ababil_Slide_Everything_Widget() );
 }
 
 // Register assets (CSS)
@@ -61,6 +64,12 @@ add_action( 'elementor/frontend/after_register_styles', function() {
         'ababil-breadcrumb',
         plugins_url( '/assets/css/breadcrumb.css', __FILE__ ),
         [],
+        '1.0.0'
+    );
+    wp_register_style(
+        'ababil-slide-everything',
+        plugins_url( '/assets/css/slide-everything.css', __FILE__ ),
+        [ 'swiper' ],
         '1.0.0'
     );
 } );
@@ -92,6 +101,13 @@ add_action( 'elementor/frontend/after_register_scripts', function() {
         'ababil-breadcrumb',
         plugins_url( '/assets/js/breadcrumb.js', __FILE__ ),
         [ 'jquery' ],
+        '1.0.0',
+        true
+    );
+    wp_register_script(
+        'ababil-slide-everything',
+        plugins_url( '/assets/js/slide-everything.js', __FILE__ ),
+        [ 'jquery', 'swiper' ],
         '1.0.0',
         true
     );
