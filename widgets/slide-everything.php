@@ -248,15 +248,15 @@ class Ababil_Slide_Everything_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
-            'note',
-            [
-                'type' => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'  => __( 'Note: Ensure a container with class ".post_list" contains ".post" elements to slide. Slides are visible in preview or published page.', 'ababil' ),
-                'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-                'separator' => 'before',
-            ]
-        );
+        // $this->add_control(
+        //     'note',
+        //     [
+        //         'type' => \Elementor\Controls_Manager::RAW_HTML,
+        //         'raw'  => __( 'Note: Ensure a container with class ".post_list" contains ".post" elements to slide. Slides are visible in preview or published page.', 'ababil' ),
+        //         'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+        //         'separator' => 'before',
+        //     ]
+        // );
 
         $this->end_controls_section();
 
@@ -639,7 +639,7 @@ class Ababil_Slide_Everything_Widget extends \Elementor\Widget_Base {
                 <div class="swiper-slide">
                     <div style="text-align: center; padding: 20px;">
                         <strong><?php esc_html_e( 'Ababil Slide Everything', 'ababil' ); ?></strong><br>
-                        <?php esc_html_e( 'Ensure a container with class ".post_list" contains ".post" elements to slide.', 'ababil' ); ?><br>
+                        <?php // esc_html_e( 'Ensure a container with class ".post_list" contains ".post" elements to slide.', 'ababil' ); ?>
                         <# if ( settings.post_list_selector ) { #>
                             <?php esc_html_e( 'Selector: ', 'ababil' ); ?><strong>{{{ settings.post_list_selector }}}</strong>
                         <# } #>
