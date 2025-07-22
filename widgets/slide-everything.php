@@ -73,13 +73,12 @@ class Ababil_Slide_Everything_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
-            'post_list_selector',
+            'parent_id',
             [
-                'label'       => __( 'Post List Selector', 'ababil' ),
-                'type'        => \Elementor\Controls_Manager::TEXT,
-                'default'     => '.post_list',
-                'placeholder' => __( 'Enter the container class (e.g., .post_list)', 'ababil' ),
-                'description' => __( 'The widget will slide each .post element within this container.', 'ababil' ),
+                'label' => esc_html__( 'Target Container ID', 'plugin-name' ),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => '',
+                'description' => 'Enter the ID of the container whose children will be turned into slides.'
             ]
         );
 
@@ -552,80 +551,53 @@ class Ababil_Slide_Everything_Widget extends \Elementor\Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        $is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode();
-        $slider_id = ! empty( $settings['slider_id'] ) ? esc_attr( $settings['slider_id'] ) : 'ababil-slide-everything-' . $this->get_id();
-        $post_list_selector = ! empty( $settings['post_list_selector'] ) ? esc_attr( $settings['post_list_selector'] ) : '.post_list';
 
-        // Convert settings to data attributes
-        $loop = $settings['loop'] === 'yes' ? 1 : 0;
-        $autoplay = $settings['autoplay'] === 'yes' ? 1 : 0;
-        $autoplay_reverse = $settings['autoplay_reverse'] === 'yes' ? 1 : 0;
-        $center_slides = $settings['center_slides'] === 'yes' ? 1 : 0;
-        $pagination = $settings['pagination'] === 'yes' ? 1 : 0;
-        $arrows = $settings['arrows'] === 'yes' ? 1 : 0;
-        $mousewheel = $settings['mousewheel'] === 'yes' ? 1 : 0;
-        $free_mode = $settings['free_mode'] === 'yes' ? 1 : 0;
-        $autoplay_delay = ! empty( $settings['autoplay_delay'] ) ? $settings['autoplay_delay']['size'] : 3000;
-        $latest_swiper = \Elementor\Plugin::$instance->experiments->is_feature_active( 'e_swiper_latest' );
+        $container_id     = $settings['parent_id'];
+        $slides_per_view  = $settings['spv'] ?? 3;
+        $spvp             = $settings['spvp'] ?? 1;
+        $spvt             = $settings['spvt'] ?? 2;
+        $space_between    = $settings['spacebetween'] ?? 20;
+        $loop             = $settings['loop'] === 'yes' ? 'true' : 'false';
+        $autoplay         = $settings['autoplay'] === 'yes' ? 'true' : 'false';
+        $autoplay_delay   = $settings['autoplay_delay'] ?? 3000;
+        $autoplay_reverse = $settings['autoplay_reverse'] === 'yes' ? 'true' : 'false';
+        $center_slides    = $settings['center_slides'] === 'yes' ? 'true' : 'false';
+        $pagination       = $settings['pagination'] === 'yes' ? 'true' : 'false';
+        $arrows           = $settings['arrows'] === 'yes' ? 'true' : 'false';
+        $mousewheel       = $settings['mousewheel'] === 'yes' ? 'true' : 'false';
+        $freemode         = $settings['freemode'] === 'yes' ? 'true' : 'false';
 
-        $this->add_render_attribute( 'container', [
-            'class' => [ 'ababil-slide-everything-container', 'swiper-container' ],
-            'id'    => $slider_id,
-            'data-post-list-selector' => $post_list_selector,
-            'data-spv'           => esc_attr( $settings['slides_per_view'] ),
-            'data-spvt'          => esc_attr( $settings['slides_per_view_tablet'] ),
-            'data-spvp'          => esc_attr( $settings['slides_per_view_phone'] ),
-            'data-spacebetween'  => esc_attr( $settings['space_between'] ),
-            'data-loop'          => esc_attr( $loop ),
-            'data-autoplay'      => esc_attr( $autoplay ),
-            'data-autoplay-reverse' => esc_attr( $autoplay_reverse ),
-            'data-autoplay-delay' => esc_attr( $autoplay_delay ),
-            'data-center-slides' => esc_attr( $center_slides ),
-            'data-pagination'    => esc_attr( $pagination ),
-            'data-arrows'        => esc_attr( $arrows ),
-            'data-mousewheel'    => esc_attr( $mousewheel ),
-            'data-freemode'      => esc_attr( $free_mode ),
-            'data-latest-swiper' => esc_attr( $latest_swiper ),
-        ] );
-
+        // Render slide container — this container will NOT be the swiper itself,
+        // but will control the Swiper behavior on the container ID provided
         ?>
-        <div <?php echo $this->get_render_attribute_string( 'container' ); ?>>
-            <div class="swiper-wrapper">
-                <?php if ( $is_editor ) : ?>
-                    <div class="swiper-slide">
-                        <div style="text-align: center; padding: 20px;">
-                            <strong><?php esc_html_e( 'Ababil Slide Everything', 'ababil' ); ?></strong><br>
-                            <?php esc_html_e( 'Ensure a container with class ".post_list" contains ".post" elements to slide.', 'ababil' ); ?><br>
-                            <?php if ( ! \Elementor\Plugin::$instance->experiments->is_feature_active( 'container' ) ) : ?>
-                                <strong style="color: red;">
-                                    <?php esc_html_e( 'This widget requires Elementor Flexbox Container. Please activate it!', 'ababil' ); ?>
-                                </strong>
-                            <?php endif; ?>
-                            <?php if ( $settings['post_list_selector'] ) : ?>
-                                <br><?php esc_html_e( 'Selector: ', 'ababil' ); ?><strong><?php echo esc_html( $settings['post_list_selector'] ); ?></strong>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-            <?php if ( $settings['pagination'] === 'yes' ) : ?>
-                <div class="swiper-pagination"></div>
+        <div class="ababil-slide-everything-container"
+            data-parent-id="<?php echo esc_attr( $container_id ); ?>"
+            data-spv="<?php echo esc_attr( $slides_per_view ); ?>"
+            data-spvp="<?php echo esc_attr( $spvp ); ?>"
+            data-spvt="<?php echo esc_attr( $spvt ); ?>"
+            data-spacebetween="<?php echo esc_attr( $space_between ); ?>"
+            data-loop="<?php echo $loop; ?>"
+            data-autoplay="<?php echo $autoplay; ?>"
+            data-autoplay-delay="<?php echo esc_attr( $autoplay_delay ); ?>"
+            data-autoplay-reverse="<?php echo $autoplay_reverse; ?>"
+            data-center-slides="<?php echo $center_slides; ?>"
+            data-pagination="<?php echo $pagination; ?>"
+            data-arrows="<?php echo $arrows; ?>"
+            data-mousewheel="<?php echo $mousewheel; ?>"
+            data-freemode="<?php echo $freemode; ?>"
+        >
+            <?php if ( $arrows === 'true' ) : ?>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             <?php endif; ?>
-            <?php if ( $settings['arrows'] === 'yes' ) : ?>
-                <div class="swiper-button-prev">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                    </svg>
-                </div>
-                <div class="swiper-button-next">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
-                    </svg>
-                </div>
+
+            <?php if ( $pagination === 'true' ) : ?>
+                <div class="swiper-pagination"></div>
             <?php endif; ?>
         </div>
         <?php
     }
+
 
     protected function content_template() {
         ?>
