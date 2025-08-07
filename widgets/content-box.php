@@ -397,11 +397,22 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'box_padding',
             [
-                'label'      => __( 'Padding', 'ababil' ),
+                'label'      => __( 'Box Padding', 'ababil' ),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => [ 'px', '%', 'em' ],
                 'selectors'  => [
                     '{{WRAPPER}} .ababil-content-box' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+        $this->add_responsive_control(
+            'content_padding',
+            [
+                'label'      => __( 'Content Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-text-wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -644,6 +655,49 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     '{{WRAPPER}} .ababil-content-box-image img' => 'object-fit: {{VALUE}};',
                 ],
                 'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_control(
+            'image_object_position',
+            [
+                'label' => esc_html__( 'Object Position', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'center center' => esc_html__( 'Center Center', 'ababil' ),
+                    'center top' => esc_html__( 'Center Top', 'ababil' ),
+                    'center bottom' => esc_html__( 'Center Bottom', 'ababil' ),
+                    'left top' => esc_html__( 'Left Top', 'ababil' ),
+                    'left center' => esc_html__( 'Left Center', 'ababil' ),
+                    'left bottom' => esc_html__( 'Left Bottom', 'ababil' ),
+                    'right top' => esc_html__( 'Right Top', 'ababil' ),
+                    'right center' => esc_html__( 'Right Center', 'ababil' ),
+                    'right bottom' => esc_html__( 'Right Bottom', 'ababil' ),
+                    'custom' => esc_html__( 'Custom', 'ababil' ),
+                ],
+                'default' => 'center center',
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'object-position: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'image' ],
+            ]
+        );
+        $this->add_responsive_control(
+            'image_object_position_custom',
+            [
+                'label' => esc_html__( 'Custom Object Position', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ '%', 'px' ],
+                'range' => [
+                    '%' => [ 'min' => -100, 'max' => 100 ],
+                    'px' => [ 'min' => -1000, 'max' => 1000 ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-image img' => 'object-position: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'graphic_element' => 'image',
+                    'image_object_position' => 'custom',
+                ],
             ]
         );
         $this->add_group_control(
