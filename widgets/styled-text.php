@@ -21,6 +21,10 @@ class Ababil_Styled_Text_Widget extends \Elementor\Widget_Base {
         return [ 'ababil' ];
     }
 
+    public function get_keywords() {
+        return [ 'info box', 'feature', 'Heading', 'Style Heading', 'ababil' ];
+    }
+
     public function get_style_depends() {
         return [ 'ababil-styled-text' ];
     }
