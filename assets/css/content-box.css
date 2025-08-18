@@ -1,0 +1,6 @@
+.ababil-content-box-text {
+    display: inline-block;
+    transform-origin: center center;
+    will-change: transform;
+}
+

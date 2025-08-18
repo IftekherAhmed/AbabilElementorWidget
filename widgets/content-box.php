@@ -63,6 +63,7 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     'none'  => [ 'title' => esc_html__( 'None', 'ababil' ),  'icon' => 'eicon-ban' ],
                     'icon'  => [ 'title' => esc_html__( 'Icon', 'ababil' ),  'icon' => 'eicon-star' ],
                     'image' => [ 'title' => esc_html__( 'Image', 'ababil' ), 'icon' => 'eicon-image-bold' ],
+                    'text'  => [ 'title' => esc_html__( 'Text', 'ababil' ), 'icon' => 'eicon-t-letter-bold' ],
                 ],
                 'default' => 'icon',
             ]
@@ -99,6 +100,19 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        // Add new control for the text graphic
+        $this->add_control(
+            'graphic_text',
+            [
+                'label'     => __( 'Text', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::TEXT,
+                'default'   => '01',
+                'condition' => [
+                    'graphic_element' => 'text',
+                ],
+            ]
+        );
+
         // -- Control: Badge
         $this->add_control(
             'badge_text',
@@ -121,7 +135,7 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
             'heading_part',
             [
                 'label'       => esc_html__( 'Text', 'ababil' ),
-                'type'        => \Elementor\Controls_Manager::TEXT,
+                'type'        => \Elementor\Controls_Manager::TEXTAREA,
                 'default'     => esc_html__( 'Styled Text', 'ababil' ),
                 'label_block' => true,
                 'dynamic'     => [ 'active' => true ],
@@ -418,11 +432,11 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         );
         $this->end_controls_section();
 
-        // -- Icon & Image Style
+        // -- Icon & Image & Text Style
         $this->start_controls_section(
             'graphic_style_section',
             [
-                'label'     => __( 'Icon & Image', 'ababil' ),
+                'label'     => __( 'Icon, Image & Text', 'ababil' ),
                 'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
                 'condition' => [ 'graphic_element!' => 'none' ],
             ]
@@ -538,6 +552,182 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         );
         $this->end_controls_tab();
         $this->end_controls_tabs();
+
+        // Add Text Style controls
+        $this->add_control(
+            'text_style_heading',
+            [
+                'label'     => esc_html__( 'Text', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_control(
+            'text_view',
+            [
+                'label'     => esc_html__( 'View', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SELECT,
+                'options'   => [
+                    'default' => esc_html__( 'Default', 'ababil' ),
+                    'framed'  => esc_html__( 'Framed', 'ababil' ),
+                ],
+                'default'   => 'default',
+                'prefix_class' => 'ababil-text-view-',
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->start_controls_tabs(
+            'text_colors',
+            [
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->start_controls_tab(
+            'text_colors_normal',
+            [
+                'label' => __( 'Normal', 'ababil' ),
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_control(
+            'text_primary_color',
+            [
+                'label'     => __( 'Primary Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-text' => 'color: {{VALUE}};',
+                    '{{WRAPPER}}.ababil-text-view-framed .ababil-content-box-text'  => 'border-color: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_control(
+            'text_secondary_color',
+            [
+                'label'     => __( 'Secondary Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}}.ababil-text-view-framed .ababil-content-box-text' => 'background-color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'graphic_element' => 'text',
+                    'text_view' => 'framed',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab(
+            'text_colors_hover',
+            [
+                'label' => __( 'Hover', 'ababil' ),
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_control(
+            'text_primary_color_hover',
+            [
+                'label'     => __( 'Primary Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-text:hover' => 'color: {{VALUE}};',
+                    '{{WRAPPER}}.ababil-text-view-framed .ababil-content-box-text:hover'  => 'border-color: {{VALUE}};',
+                ],
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_control(
+            'text_secondary_color_hover',
+            [
+                'label'     => __( 'Secondary Color', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}}.ababil-text-view-framed .ababil-content-box-text:hover' => 'background-color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'graphic_element' => 'text',
+                    'text_view' => 'framed',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'      => 'text_typography',
+                'selector'  => '{{WRAPPER}} .ababil-content-box-text',
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'text_rotate',
+            [
+                'label'     => __( 'Rotate', 'ababil' ),
+                'type'      => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
+                'default'   => [ 'unit' => 'deg', 'size' => 0 ],
+                'range'     => [
+                    'deg' => [ 'min' => 0, 'max' => 360 ],
+                    'grad' => [ 'min' => 0, 'max' => 400 ],
+                    'rad' => [ 'min' => 0, 'max' => 6.2832 ],
+                    'turn' => [ 'min' => 0, 'max' => 1 ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-text' => 'transform: rotate({{SIZE}}{{UNIT}}); display: inline-block;',
+                ],
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'      => 'text_border',
+                'selector'  => '{{WRAPPER}} .ababil-content-box-text',
+                'condition' => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'text_border_radius',
+            [
+                'label'      => esc_html__( 'Border Radius', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-text' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'text_padding',
+            [
+                'label'      => esc_html__( 'Padding', 'ababil' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors'  => [
+                    '{{WRAPPER}} .ababil-content-box-text' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition'  => [ 'graphic_element' => 'text' ],
+            ]
+        );
+
+
         $this->add_responsive_control(
             'icon_box_size',
             [
@@ -1196,8 +1386,8 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
         $settings = $this->get_settings_for_display();
         ?>
         <div class="ababil-content-box">
-            <?php
-            // -- 1. Render Graphic: Icon or Image
+             <?php
+            // -- 1. Render Graphic: Icon, Image or Text
             if ( 'none' !== $settings['graphic_element'] ) : ?>
                 <div class="ababil-content-box-graphic">
                     <?php if ( 'icon' === $settings['graphic_element'] && ! empty( $settings['icon']['value'] ) ) : ?>
@@ -1207,6 +1397,10 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     <?php elseif ( 'image' === $settings['graphic_element'] && ! empty( $settings['image']['url'] ) ) : ?>
                         <span class="ababil-content-box-image">
                             <?php printf( '<img src="%s" alt="">', esc_url( $settings['image']['url'] ) ); ?>
+                        </span>
+                    <?php elseif ( 'text' === $settings['graphic_element'] && ! empty( $settings['graphic_text'] ) ) : ?>
+                        <span class="ababil-content-box-text" style="transform: rotate(<?php echo esc_attr($settings['text_rotate']['size'] . $settings['text_rotate']['unit']); ?>);">
+                            <?php echo esc_html($settings['graphic_text']); ?>
                         </span>
                     <?php endif; ?>
                 </div>
@@ -1286,6 +1480,10 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     <# } else if ( 'image' === settings.graphic_element && settings.image.url ) { #>
                         <span class="ababil-content-box-image">
                             <img src="{{{ settings.image.url }}}" alt="">
+                        </span>
+                    <# } else if ( 'text' === settings.graphic_element && settings.graphic_text ) { #>
+                        <span class="ababil-content-box-text">
+                            {{{ settings.graphic_text }}}
                         </span>
                     <# } #>
                 </div>
