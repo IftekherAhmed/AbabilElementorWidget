@@ -1,10 +1,16 @@
 <?php
 /**
  * Plugin Name: Ababil Elementor Widgets
- * Description: Custom Elementor widgets by Khan Iftekher Ahmed
+ * Description: Custom Elementor widgets for styled text, content boxes, ACF repeater accordions, breadcrumbs, and more.
  * Version: 1.0.3
  * Author: Khan Iftekher Ahmed
+ * Author URI: https://about.me/iftekherahmed/
  * Text Domain: ababil
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires at least: 5.0 (minimum WP version)
+ * Tested up to: 6.6 (latest WP version)
+ * Requires PHP: 7.4
  */
 
 defined( 'ABSPATH' ) || exit;
