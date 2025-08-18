@@ -1,73 +1,71 @@
+```
 === Ababil Elementor Widgets ===
-Contributors: your-wordpress-org-username (e.g., khaniftekher)
-Donate link: https://your-website.com/donate (optional)
-Tags: elementor, widgets, acf, accordion, breadcrumb, slider, content box, styled text
+Contributors: iftekherahmed
+Donate link: 
+Tags: elementor, widgets, acf, accordion, breadcrumb, content box, styled text
 Requires at least: 5.0
-Tested up to: 6.6
-Stable tag: 1.0.3
+Tested up to: 6.8
+Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Custom Elementor widgets including Styled Text, Content Box, ACF Repeater Accordion, Breadcrumb, and Slide Everything.
+Custom Elementor widgets including Styled Text, Content Box, ACF Repeater Accordion, and Breadcrumb for enhanced page building.
 
 == Description ==
 
-Ababil Elementor is a custom WordPress plugin that extends the Elementor page builder with unique, modern, and flexible widgets. It helps create beautiful, interactive, and professional websites easily.
+Ababil Elementor Widgets is a custom WordPress plugin that extends the Elementor page builder with a collection of unique, modern, and flexible widgets. It is designed to help you create beautiful, interactive, and professional websites with ease.
 
 = Features =
-- Multiple Custom Widgets: Styled Text, Content Box, ACF Repeater Accordion, Breadcrumb, and Slide Everything.
-- Separation of Resources: Each widget has its own CSS and JS for better performance.
-- Modern Design: Clean, responsive, and customizable styles.
-- Easy Integration: Works seamlessly with Elementor and WordPress.
-- Lightweight: Optimized for fast performance.
-- ACF Integration: Use ACF repeater fields in Elementor.
-- Responsive Sliders: Create dynamic sliders with Slide Everything.
+- **Multiple Custom Widgets:** Includes Styled Text, Content Box, ACF Repeater Accordion, and Breadcrumb for advanced layouts and dynamic content.
+- **Separation of Resources:** Each widget has its own CSS and JS for better performance and maintainability.
+- **Modern Design:** Clean, responsive, and customizable styles for all widgets.
+- **Easy Integration:** Seamlessly integrates with Elementor and WordPress.
+- **Lightweight:** Minimal code and optimized assets for fast performance.
+- **ACF Integration:** Use Advanced Custom Fields (ACF) repeater fields directly in your Elementor designs for dynamic accordions.
 
 = Example Widgets =
-- **Styled Text:** Visually appealing text with hover effects.
-- **Content Box:** Flexible boxes with icons, images, headings, badges, and buttons.
-- **ACF Repeater Accordion:** Dynamic accordions from ACF repeaters (e.g., FAQs).
-- **Breadcrumb:** Customizable navigation breadcrumbs.
-- **Slide Everything:** Turn elements into responsive sliders.
+- **Styled Text:** Add visually appealing text segments with hover effects and advanced styling.
+- **Content Box:** Create flexible content boxes with icons, images, headings, badges, and buttons.
+- **ACF Repeater Accordion:** Display dynamic accordion content from ACF repeater fields, perfect for FAQs and more.
+- **Breadcrumb:** Add customizable breadcrumb navigation for better user experience.
 
 For more details, visit [your-website.com](https://your-website.com).
 
 == Installation ==
 
-1. Download the plugin ZIP file.
+1. Download the plugin ZIP file from WordPress.org.
 2. Go to your WordPress dashboard > Plugins > Add New > Upload Plugin.
-3. Upload the ZIP and activate "Ababil Elementor Widgets".
-4. Ensure Elementor (and ACF for dynamic widgets) is installed and activated.
-5. Edit a page with Elementor and find the widgets under the "Ababil" section.
+3. Upload the `ababil-elementor-widgets.zip` file and activate "Ababil Elementor Widgets".
+4. Ensure Elementor (and ACF for the ACF Repeater Accordion widget) is installed and activated.
+5. Edit a page or post with Elementor and find the new widgets under the "Ababil" section.
+6. Drag and drop the widgets onto your page and customize as needed.
 
 == Frequently Asked Questions ==
 
-= Does this require Elementor? =
-Yes, it's an add-on for Elementor.
+= Does this plugin require Elementor? =
+Yes, Ababil Elementor Widgets is an add-on for the Elementor page builder.
 
-= Is ACF required? =
-Only for the ACF Repeater Accordion widget.
+= Is Advanced Custom Fields (ACF) required? =
+ACF is only required for the ACF Repeater Accordion widget. Other widgets work without it.
 
-= How do I customize widgets? =
-Edit CSS/JS in the assets folder or add new widgets in the widgets folder.
+= How can I customize the widgets? =
+Edit the CSS files in `assets/css/` or JavaScript files in `assets/js/` to modify styles or interactivity. You can also add new widgets by creating PHP files in the `widgets/` directory.
 
 == Screenshots ==
 
-1. Styled Text widget in action.
-2. Content Box example.
-(Add actual screenshot files like screenshot-1.png in your plugin folder if you have them. Up to 10 allowed.)
+1. Styled Text widget with customizable text segments.
+2. Content Box widget with icon and button options.
+3. ACF Repeater Accordion widget displaying dynamic content.
+4. Breadcrumb widget for navigation.
 
 == Changelog ==
 
-= 1.0.3 =
-* Fixed minor bugs.
-* Added new widget.
-
 = 1.0.0 =
-* Initial release.
+* Initial release with Styled Text, Content Box, ACF Repeater Accordion, and Breadcrumb widgets.
 
 == Upgrade Notice ==
 
-= 1.0.3 =
-Update for compatibility with Elementor 3.23.
+= 1.0.0 =
+Initial release. No upgrades yet.
+```
