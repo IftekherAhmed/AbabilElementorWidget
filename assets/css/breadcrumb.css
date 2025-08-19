@@ -1,3 +1,11 @@
+/**
+ * Ababil Elementor Widgets - Breadcrumb
+ * 
+ * @package Ababil_Elementor_Widgets
+ * @version 1.0.0
+ * @author Khan Iftekher Ahmed
+ * @license GPL-2.0-or-later
+ */
 .ababil-breadcrumb-container {
     display: flex;
     align-items: center;

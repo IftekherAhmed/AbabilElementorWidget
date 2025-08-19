@@ -1,3 +1,11 @@
+/**
+ * Ababil Elementor Widgets - ACF Repeater Accordion
+ * 
+ * @package Ababil_Elementor_Widgets
+ * @version 1.0.0
+ * @author Khan Iftekher Ahmed
+ * @license GPL-2.0-or-later
+ */
 /* Accordion Widget Styles */
 .ababil-acf-accordion-title {
     display: flex;
