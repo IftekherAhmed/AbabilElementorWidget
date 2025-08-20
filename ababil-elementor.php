@@ -41,6 +41,9 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/breadcrumb.php' );
     $widgets_manager->register( new \Ababil_Breadcrumb_Widget() );
+
+    require_once( __DIR__ . '/widgets/page-header.php' );
+    $widgets_manager->register( new \Ababil_Page_Header_Widget() );
 }
 
 // Register assets (CSS)
@@ -66,6 +69,12 @@ add_action( 'elementor/frontend/after_register_styles', function() {
     wp_register_style(
         'ababil-breadcrumb',
         plugins_url( '/assets/css/breadcrumb.css', __FILE__ ),
+        [],
+        '1.0.0'
+    );
+    wp_register_style(
+        'ababil-page-header',
+        plugins_url( '/assets/css/page-header.css', __FILE__ ),
         [],
         '1.0.0'
     );
@@ -97,6 +106,13 @@ add_action( 'elementor/frontend/after_register_scripts', function() {
     wp_register_script(
         'ababil-breadcrumb',
         plugins_url( '/assets/js/breadcrumb.js', __FILE__ ),
+        [ 'jquery' ],
+        '1.0.0',
+        true
+    );
+    wp_register_script(
+        'ababil-page-header',
+        plugins_url( '/assets/js/page-header.js', __FILE__ ),
         [ 'jquery' ],
         '1.0.0',
         true
