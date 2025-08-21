@@ -1,9 +1,6 @@
 /* Page Header Widget Styles */
 .ababil-page-header {
     position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -17,6 +14,9 @@
     width: 100%;
     height: 100%;
     z-index: 1;
+    background-color: inherit;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
 .ababil-page-header-content {

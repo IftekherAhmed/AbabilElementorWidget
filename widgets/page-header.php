@@ -30,7 +30,8 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_style_depends() {
-        return [ 'ababil-page-header' ];
+        // Add Elementor's core preview style for reliability
+        return [ 'ababil-page-header', 'elementor-frontend' ];
     }
 
     public function get_script_depends() {
@@ -87,6 +88,90 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::MEDIA,
                 'default' => [
                     'url' => \Elementor\Utils::get_placeholder_image_src(),
+                ],
+            ]
+        );
+
+        // Image Position Controls
+        $this->add_control(
+            'image_position_heading',
+            [
+                'label' => __( 'Image Position', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'image_position',
+            [
+                'label' => __( 'Position', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'center center',
+                'options' => [
+                    'top left' => __( 'Top Left', 'ababil' ),
+                    'top center' => __( 'Top Center', 'ababil' ),
+                    'top right' => __( 'Top Right', 'ababil' ),
+                    'center left' => __( 'Center Left', 'ababil' ),
+                    'center center' => __( 'Center Center', 'ababil' ),
+                    'center right' => __( 'Center Right', 'ababil' ),
+                    'bottom left' => __( 'Bottom Left', 'ababil' ),
+                    'bottom center' => __( 'Bottom Center', 'ababil' ),
+                    'bottom right' => __( 'Bottom Right', 'ababil' ),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header' => 'background-position: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'image_size',
+            [
+                'label' => __( 'Size', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'cover',
+                'options' => [
+                    'auto' => __( 'Auto', 'ababil' ),
+                    'cover' => __( 'Cover', 'ababil' ),
+                    'contain' => __( 'Contain', 'ababil' ),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header' => 'background-size: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'image_repeat',
+            [
+                'label' => __( 'Repeat', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'no-repeat',
+                'options' => [
+                    'no-repeat' => __( 'No Repeat', 'ababil' ),
+                    'repeat' => __( 'Repeat', 'ababil' ),
+                    'repeat-x' => __( 'Repeat X', 'ababil' ),
+                    'repeat-y' => __( 'Repeat Y', 'ababil' ),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header' => 'background-repeat: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'image_attachment',
+            [
+                'label' => __( 'Attachment', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'scroll',
+                'options' => [
+                    'scroll' => __( 'Scroll', 'ababil' ),
+                    'fixed' => __( 'Fixed', 'ababil' ),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header' => 'background-attachment: {{VALUE}};',
                 ],
             ]
         );
@@ -657,39 +742,46 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'overlay_opacity',
             [
-                'label' => __( 'Overlay Opacity (%)', 'ababil' ),
+                'label' => __( 'Overlay Opacity', 'ababil' ),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'default' => [
-                    'size' => 50,
+                    'size' => 0.5,
                 ],
                 'range' => [
                     'px' => [
-                        'max' => 100,
+                        'max' => 1,
                         'min' => 0,
-                        'step' => 1,
+                        'step' => 0.01,
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-page-header-overlay' => 'opacity: calc({{SIZE}} / 100);',
+                    '{{WRAPPER}} .ababil-page-header-overlay' => 'opacity: {{SIZE}};',
                 ],
             ]
         );
 
-        // Header Height
+        // Header Height - Modified range and default
         $this->add_responsive_control(
             'header_height',
             [
                 'label' => __( 'Height', 'ababil' ),
                 'type' => \Elementor\Controls_Manager::SLIDER,
-                'size_units' => [ 'px', 'vh' ],
+                'size_units' => [ 'px', 'vh', '%' ],
                 'range' => [
                     'px' => [
-                        'min' => 100,
-                        'max' => 1000,
+                        'min' => 0,
+                        'max' => 2000,
+                        'step' => 1,
                     ],
                     'vh' => [
-                        'min' => 10,
-                        'max' => 100,
+                        'min' => 0,
+                        'max' => 200,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 200,
+                        'step' => 1,
                     ],
                 ],
                 'default' => [
@@ -1312,8 +1404,13 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         $this->add_render_attribute('overlay', 'class', 'ababil-page-header-overlay');
         
         if ($image_url) {
-            $this->add_render_attribute('header', 'style', 'background-image: url(' . esc_url($image_url) . ');');
+            $background_style = sprintf(
+                'background-image: url(%s);',
+                esc_url($image_url)
+            );
+            $this->add_render_attribute('header', 'style', $background_style);
         }
+
         ?>
         
         <div <?php echo $this->get_render_attribute_string('header'); ?>>
@@ -1525,14 +1622,14 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         }
 
         var background_style = '';
+        var image_position = settings.image_position || 'center center';
         if (image_url) {
-            background_style = 'background-image: url(' + image_url + ');';
+            background_style = 'background-image: url(' + image_url + '); background-position: ' + image_position + ';';
         }
         #>
         
         <div class="ababil-page-header" style="{{ background_style }} min-height: {{ settings.header_height.size }}{{ settings.header_height.unit }};">
             <div class="ababil-page-header-overlay"></div>
-            
             <div class="ababil-page-header-content" style="text-align: {{ settings.content_alignment }}; padding: {{ settings.header_padding.top }}{{ settings.header_padding.unit }} {{ settings.header_padding.right }}{{ settings.header_padding.unit }} {{ settings.header_padding.bottom }}{{ settings.header_padding.unit }} {{ settings.header_padding.left }}{{ settings.header_padding.unit }};">
                 <# if (settings.content_order && settings.content_order.length) { #>
                     <# _.each(settings.content_order, function(item, index) { #>
