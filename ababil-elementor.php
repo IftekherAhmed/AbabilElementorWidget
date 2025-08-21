@@ -44,7 +44,27 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/page-header.php' );
     $widgets_manager->register( new \Ababil_Page_Header_Widget() );
+
+    require_once( __DIR__ . '/widgets/code-injection.php' );
+    $widgets_manager->register( new \Ababil_Code_Injection_Widget() );
 }
+
+/* For Code Injection Widget */
+// Enable shortcode execution in Elementor preview
+add_filter('elementor/widget/render_content', function($content, $widget) {
+    if ($widget->get_name() === 'ababil-code-injection') {
+        // Process shortcodes in the preview content
+        $content = do_shortcode($content);
+    }
+    return $content;
+}, 10, 2);
+
+// Add filter for shortcode preview in editor
+add_filter('ababil_shortcode_preview', function($shortcode) {
+    return do_shortcode($shortcode);
+});
+// End For the Code Injection Widget
+
 
 // Register assets (CSS)
 add_action( 'elementor/frontend/after_register_styles', function() {
@@ -83,36 +103,8 @@ add_action( 'elementor/frontend/after_register_styles', function() {
 // Register assets (JS)
 add_action( 'elementor/frontend/after_register_scripts', function() {
     wp_register_script(
-        'ababil-styled-text',
-        plugins_url( '/assets/js/styled-text.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-content-box',
-        plugins_url( '/assets/js/content-box.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
         'ababil-acf-repeater-accordion',
         plugins_url( '/assets/js/acf-repeater-accordion.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-breadcrumb',
-        plugins_url( '/assets/js/breadcrumb.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-page-header',
-        plugins_url( '/assets/js/page-header.js', __FILE__ ),
         [ 'jquery' ],
         '1.0.0',
         true
