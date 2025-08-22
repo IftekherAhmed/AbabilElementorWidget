@@ -346,37 +346,6 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                 'condition' => [ 'button_icon[value]!' => '' ],
             ]
         );
-        $this->add_responsive_control(
-            'button_icon_spacing',
-            [
-                'label'     => __( 'Icon Spacing', 'ababil' ),
-                'type'      => \Elementor\Controls_Manager::SLIDER,
-                'range'     => [ 'px' => [ 'max' => 50 ] ],
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-content-box-button .ababil-button-icon' => 'margin-right: {{SIZE}}{{UNIT}};',
-                ],
-                'condition' => [ 'button_icon[value]!' => '' ],
-            ]
-        );
-        $this->add_responsive_control(
-            'button_icon_vertical_align',
-            [
-                'label' => __( 'Icon Vertical Offset', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::SLIDER,
-                'size_units' => [ 'px', 'em', '%' ],
-                'range' => [
-                    'px' => [ 'min' => -30, 'max' => 30 ],
-                    'em' => [ 'min' => -2, 'max' => 2, 'step' => 0.1 ],
-                    '%' => [ 'min' => -20, 'max' => 20 ],
-                ],
-                'default' => [ 'size' => 0, 'unit' => 'px' ],
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-content-box-button .ababil-button-icon' => 'position: relative; top: {{SIZE}}{{UNIT}};',
-                ],
-                'condition' => [ 'button_icon[value]!' => '' ],
-            ]
-        );
-
         $this->end_controls_section();
 
         //======================================================================================
@@ -1392,17 +1361,63 @@ class Ababil_Content_Box_Widget extends \Elementor\Widget_Base {
                     '{{WRAPPER}} .ababil-content-box-button .ababil-button-icon svg' => 'width: 1em; height: 1em;',
                 ],
             ]
+        );        
+        $this->add_responsive_control(
+            'button_icon_size',
+            [
+                'label' => __( 'Button Icon Size', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'range' => [ 'px' => [ 'min' => 6, 'max' => 300 ] ],
+                'default' => [ 'unit' => 'px', 'size' => 20 ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button .icon-left i, {{WRAPPER}} .ababil-content-box-button .icon-right i' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-content-box-button .icon-left svg, {{WRAPPER}} .ababil-content-box-button .icon-right svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'button_icon[value]!' => '' ],
+            ]
         );
         $this->add_responsive_control(
-            'button_icon_spacing',
+            'button_icon_vertical_align',
+            [
+                'label' => __( 'Icon Vertical Offset', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', 'em', '%' ],
+                'range' => [
+                    'px' => [ 'min' => -30, 'max' => 30 ],
+                    'em' => [ 'min' => -2, 'max' => 2, 'step' => 0.1 ],
+                    '%' => [ 'min' => -20, 'max' => 20 ],
+                ],
+                'default' => [ 'size' => 0, 'unit' => 'px' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button .ababil-button-icon' => 'position: relative; top: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'button_icon[value]!' => '' ],
+            ]
+        );
+        // Left icon spacing
+        $this->add_responsive_control(
+            'button_icon_spacing_left',
             [
                 'label' => __( 'Icon Spacing', 'ababil' ),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'range' => [ 'px' => [ 'max' => 50 ] ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-content-box-button .ababil-button-icon' => 'margin-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-content-box-button .icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
                 ],
-                'condition' => [ 'button_icon[value]!' => '' ],
+                'condition' => [ 'button_icon[value]!' => '', 'button_icon_position' => 'left' ],
+            ]
+        );
+        // Right icon spacing
+        $this->add_responsive_control(
+            'button_icon_spacing_right',
+            [
+                'label' => __( 'Icon Spacing', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'range' => [ 'px' => [ 'max' => 50 ] ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-content-box-button .icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [ 'button_icon[value]!' => '', 'button_icon_position' => 'right' ],
             ]
         );
         $this->add_responsive_control(
