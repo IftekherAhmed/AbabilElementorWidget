@@ -192,6 +192,57 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
                 ],
                 'default' => 'title',
             ]
+        );        
+
+        // Title Source
+        $repeater->add_control(
+            'title_source',
+            [
+                'label' => __( 'Title Source', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'default' => __( 'Default Page Title', 'ababil' ),
+                    'custom' => __( 'Custom Text', 'ababil' ),
+                    'dynamic' => __( 'Dynamic Tag', 'ababil' ),
+                ],
+                'default' => 'default',
+                'condition' => [
+                    'content_type' => 'title',
+                ],
+            ]
+        );
+
+        // Custom Title
+        $repeater->add_control(
+            'custom_title',
+            [
+                'label' => __( 'Custom Title', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'condition' => [
+                    'content_type' => 'title',
+                    'title_source' => 'custom',
+                ],
+                'dynamic' => [
+                    'active' => true,
+                ],
+            ]
+        );
+
+        // Dynamic Tag
+        $repeater->add_control(
+            'dynamic_tag',
+            [
+                'label' => __( 'Dynamic Tag', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'description' => __( 'Enter dynamic tags (ACF, shortcodes, etc.) e.g., [acf_field], {{post_title}}', 'ababil' ),
+                'condition' => [
+                    'content_type' => 'title',
+                    'title_source' => 'dynamic',
+                ],
+                'dynamic' => [
+                    'active' => true,
+                ],
+            ]
         );
 
         // Title HTML Tag
@@ -566,6 +617,7 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
                     ],
                     [
                         'content_type' => 'title',
+                        'title_source' => 'default',
                     ],
                     [
                         'content_type' => 'divider',
@@ -1507,24 +1559,47 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
      */
     private function render_title($settings = []) {
         $defaults = [
+            'title_source' => 'default',
+            'custom_title' => '',
+            'dynamic_tag' => '',
             'title_html_tag' => 'h1',
         ];
         
         $settings = wp_parse_args($settings, $defaults);
         $title_tag = \Elementor\Utils::validate_html_tag($settings['title_html_tag']);
+        $title_content = '';
         
-        echo '<' . $title_tag . ' class="ababil-page-header-title">';
-        if (is_singular()) {
-            echo get_the_title();
-        } else if (is_archive()) {
-            the_archive_title();
-        } else if (is_search()) {
-            printf(esc_html__('Search Results for: %s', 'ababil'), get_search_query());
-        } else if (is_404()) {
-            esc_html_e('Page Not Found', 'ababil');
-        } else {
-            bloginfo('name');
+        // Determine title content based on source
+        switch ($settings['title_source']) {
+            case 'custom':
+                $title_content = $settings['custom_title'];
+                break;
+                
+            case 'dynamic':
+                $title_content = $settings['dynamic_tag'];
+                // Process shortcodes and dynamic tags
+                $title_content = do_shortcode($title_content);
+                break;
+                
+            case 'default':
+            default:
+                if (is_singular()) {
+                    $title_content = get_the_title();
+                } else if (is_archive()) {
+                    $title_content = get_the_archive_title();
+                } else if (is_search()) {
+                    $title_content = sprintf(esc_html__('Search Results for: %s', 'ababil'), get_search_query());
+                } else if (is_404()) {
+                    $title_content = esc_html__('Page Not Found', 'ababil');
+                } else {
+                    $title_content = get_bloginfo('name');
+                }
+                break;
         }
+        
+        // Output the title
+        echo '<' . $title_tag . ' class="ababil-page-header-title">';
+        echo wp_kses_post($title_content);
         echo '</' . $title_tag . '>';
     }
 
@@ -1654,7 +1729,13 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
                             case 'title': #>
                                 <# var title_tag = elementor.helpers.validateHTMLTag(item.title_html_tag) || 'h1'; #>
                                 <{{ title_tag }} class="ababil-page-header-title" style="color: {{ settings.title_color }}; margin: {{ settings.title_margin.top }}{{ settings.title_margin.unit }} {{ settings.title_margin.right }}{{ settings.title_margin.unit }} {{ settings.title_margin.bottom }}{{ settings.title_margin.unit }} {{ settings.title_margin.left }}{{ settings.title_margin.unit }};">
-                                    <?php echo esc_html__('Page Title', 'ababil'); ?>
+                                    <# if (item.title_source === 'custom' && item.custom_title) { #>
+                                        {{{ item.custom_title }}}
+                                    <# } else if (item.title_source === 'dynamic' && item.dynamic_tag) { #>
+                                        {{{ item.dynamic_tag }}}
+                                    <# } else { #>
+                                        <?php echo esc_html__('Page Title', 'ababil'); ?>
+                                    <# } #>
                                 </{{ title_tag }}>
                                 <# break;
                                 
