@@ -640,6 +640,65 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'content_width_heading',
+            [
+                'label' => __( 'Content Width', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'content_max_width',
+            [
+                'label' => __( 'Content Max Width', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', '%' ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 2000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header-content-inner' => 'max-width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'content_horizontal_alignment',
+            [
+                'label' => __( 'Horizontal Alignment', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    'flex-start' => [
+                        'title' => __( 'Left', 'ababil' ),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => __( 'Center', 'ababil' ),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'flex-end' => [
+                        'title' => __( 'Right', 'ababil' ),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'center',
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-page-header-content' => 'align-items: {{VALUE}};',
+                ],
+            ]
+        );
+
         // NEW: Visibility Conditions
         $this->add_control(
             'visibility_heading',
@@ -1453,6 +1512,7 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         
         $this->add_render_attribute('header', 'class', 'ababil-page-header');
         $this->add_render_attribute('content', 'class', 'ababil-page-header-content');
+        $this->add_render_attribute('content_inner', 'class', 'ababil-page-header-content-inner');
         $this->add_render_attribute('overlay', 'class', 'ababil-page-header-overlay');
         
         if ($image_url) {
@@ -1469,29 +1529,31 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
             <div <?php echo $this->get_render_attribute_string('overlay'); ?>></div>
             
             <div <?php echo $this->get_render_attribute_string('content'); ?>>
-                <?php 
-                if (!empty($settings['content_order'])) {
-                    foreach ($settings['content_order'] as $index => $item) {
-                        switch ($item['content_type']) {
-                            case 'breadcrumb':
-                                $this->render_breadcrumb($item);
-                                break;
-                                
-                            case 'title':
-                                $this->render_title($item);
-                                break;
-                                
-                            case 'description':
-                                $this->render_description($item);
-                                break;
-                                
-                            case 'divider':
-                                $this->render_divider($item);
-                                break;
+                <div <?php echo $this->get_render_attribute_string('content_inner'); ?>>
+                    <?php 
+                    if (!empty($settings['content_order'])) {
+                        foreach ($settings['content_order'] as $index => $item) {
+                            switch ($item['content_type']) {
+                                case 'breadcrumb':
+                                    $this->render_breadcrumb($item);
+                                    break;
+                                    
+                                case 'title':
+                                    $this->render_title($item);
+                                    break;
+                                    
+                                case 'description':
+                                    $this->render_description($item);
+                                    break;
+                                    
+                                case 'divider':
+                                    $this->render_divider($item);
+                                    break;
+                            }
                         }
                     }
-                }
-                ?>
+                    ?>
+                </div>
             </div>
         </div>
         
@@ -1734,92 +1796,94 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         
         <div class="ababil-page-header" style="{{ background_style }} min-height: {{ settings.header_height.size }}{{ settings.header_height.unit }};">
             <div class="ababil-page-header-overlay"></div>
-            <div class="ababil-page-header-content" style="text-align: {{ settings.content_alignment }}; padding: {{ settings.header_padding.top }}{{ settings.header_padding.unit }} {{ settings.header_padding.right }}{{ settings.header_padding.unit }} {{ settings.header_padding.bottom }}{{ settings.header_padding.unit }} {{ settings.header_padding.left }}{{ settings.header_padding.unit }};">
-                <# if (settings.content_order && settings.content_order.length) { #>
-                    <# _.each(settings.content_order, function(item, index) { #>
-                        <# switch(item.content_type) { 
-                            case 'breadcrumb': #>
-                                <div class="ababil-page-header-breadcrumb" style="margin: {{ settings.breadcrumb_margin.top }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.right }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.bottom }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.left }}{{ settings.breadcrumb_margin.unit }}; justify-content: {{ settings.breadcrumb_container_alignment }};">
-                                    <div class="ababil-page-header-breadcrumb-inner">
-                                        <span class="ababil-breadcrumb-item"><a href="#" style="color: {{ settings.breadcrumb_link_color }};"><?php echo esc_html__('Home', 'ababil'); ?></a></span>
-                                        <span class="ababil-breadcrumb-separator">
-                                            <# if (item.breadcrumb_separator_type === 'icon' && item.breadcrumb_separator_icon.value) { #>
-                                                <# var separatorIconHTML = elementor.helpers.renderIcon(view, item.breadcrumb_separator_icon, { 'aria-hidden': true }, 'i', 'object'); #>
-                                                {{{ separatorIconHTML.value }}}
-                                            <# } else { #>
-                                                {{ item.breadcrumb_separator_text || '/' }}
-                                            <# } #>
-                                        </span>
-                                        <span class="ababil-breadcrumb-item" style="color: {{ settings.breadcrumb_color }};"><?php echo esc_html__('Current Page', 'ababil'); ?></span>
+            <div class="ababil-page-header-content" style="text-align: {{ settings.content_alignment }}; padding: {{ settings.header_padding.top }}{{ settings.header_padding.unit }} {{ settings.header_padding.right }}{{ settings.header_padding.unit }} {{ settings.header_padding.bottom }}{{ settings.header_padding.unit }} {{ settings.header_padding.left }}{{ settings.header_padding.unit }}; align-items: {{ settings.content_horizontal_alignment }};">
+                <div class="ababil-page-header-content-inner" style="max-width: {{ settings.content_max_width.size }}{{ settings.content_max_width.unit }};">
+                    <# if (settings.content_order && settings.content_order.length) { #>
+                        <# _.each(settings.content_order, function(item, index) { #>
+                            <# switch(item.content_type) { 
+                                case 'breadcrumb': #>
+                                    <div class="ababil-page-header-breadcrumb" style="margin: {{ settings.breadcrumb_margin.top }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.right }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.bottom }}{{ settings.breadcrumb_margin.unit }} {{ settings.breadcrumb_margin.left }}{{ settings.breadcrumb_margin.unit }}; justify-content: {{ settings.breadcrumb_container_alignment }};">
+                                        <div class="ababil-page-header-breadcrumb-inner">
+                                            <span class="ababil-breadcrumb-item"><a href="#" style="color: {{ settings.breadcrumb_link_color }};"><?php echo esc_html__('Home', 'ababil'); ?></a></span>
+                                            <span class="ababil-breadcrumb-separator">
+                                                <# if (item.breadcrumb_separator_type === 'icon' && item.breadcrumb_separator_icon.value) { #>
+                                                    <# var separatorIconHTML = elementor.helpers.renderIcon(view, item.breadcrumb_separator_icon, { 'aria-hidden': true }, 'i', 'object'); #>
+                                                    {{{ separatorIconHTML.value }}}
+                                                <# } else { #>
+                                                    {{ item.breadcrumb_separator_text || '/' }}
+                                                <# } #>
+                                            </span>
+                                            <span class="ababil-breadcrumb-item" style="color: {{ settings.breadcrumb_color }};"><?php echo esc_html__('Current Page', 'ababil'); ?></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <# break;
-                                
-                            case 'title': #>
-                                <# var title_tag = elementor.helpers.validateHTMLTag(item.title_html_tag) || 'h1'; #>
-                                <# var title_content = ''; #>
-                                <# if (item.title_source === 'custom' && item.custom_title) { #>
-                                    <# title_content = item.custom_title; #>
-                                <# } else if (item.title_source === 'dynamic' && item.dynamic_tag) { #>
-                                    <# title_content = item.dynamic_tag; #>
-                                <# } else { #>
-                                    <# title_content = '<?php echo esc_html__('Page Title', 'ababil'); ?>'; #>
-                                <# } #>
-                                
-                                <# if (title_content) { #>
-                                    <{{ title_tag }} class="ababil-page-header-title" style="color: {{ settings.title_color }}; margin: {{ settings.title_margin.top }}{{ settings.title_margin.unit }} {{ settings.title_margin.right }}{{ settings.title_margin.unit }} {{ settings.title_margin.bottom }}{{ settings.title_margin.unit }} {{ settings.title_margin.left }}{{ settings.title_margin.unit }};">
-                                        {{{ title_content }}}
-                                    </{{ title_tag }}>
-                                <# } #>
-                                <# break;
-                                
-                            case 'description': #>
-                                <div class="ababil-page-header-description" style="color: {{ settings.description_color }}; margin-bottom: {{ settings.description_spacing.size }}{{ settings.description_spacing.unit }};">
-                                    <# if (item.description_type === 'custom' && item.custom_description) { #>
-                                        {{{ item.custom_description }}}
+                                    <# break;
+                                    
+                                case 'title': #>
+                                    <# var title_tag = elementor.helpers.validateHTMLTag(item.title_html_tag) || 'h1'; #>
+                                    <# var title_content = ''; #>
+                                    <# if (item.title_source === 'custom' && item.custom_title) { #>
+                                        <# title_content = item.custom_title; #>
+                                    <# } else if (item.title_source === 'dynamic' && item.dynamic_tag) { #>
+                                        <# title_content = item.dynamic_tag; #>
                                     <# } else { #>
-                                        <?php echo esc_html__('This is a sample page description that would be dynamically pulled from the page content.', 'ababil'); ?>
+                                        <# title_content = '<?php echo esc_html__('Page Title', 'ababil'); ?>'; #>
                                     <# } #>
-                                </div>
-                                <# break;
-                                
-                            case 'divider': #>
-                                <div class="ababil-page-header-divider" style="margin: {{ settings.divider_margin.top }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.right }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.bottom }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.left }}{{ settings.divider_margin.unit }}; justify-content: {{ settings.divider_alignment }};">
-                                    <# switch(item.divider_type) {
-                                        case 'line': #>
-                                            <div class="ababil-page-header-divider-line" style="background-color: {{ item.divider_line_color }}; height: {{ item.divider_line_height.size }}{{ item.divider_line_height.unit }}; width: {{ item.divider_line_width.size }}{{ item.divider_line_width.unit }};"></div>
-                                            <# break;
-                                            
-                                        case 'icon': #>
-                                            <# if (item.divider_icon && item.divider_icon.value) { #>
-                                                <div class="ababil-page-header-divider-icon" style="color: {{ item.divider_icon_color }};">
-                                                    <# var dividerIconHTML = elementor.helpers.renderIcon(view, item.divider_icon, { 'aria-hidden': true }, 'i', 'object'); #>
-                                                    {{{ dividerIconHTML.value }}}
-                                                </div>
-                                            <# } #>
-                                            <# break;
-                                            
-                                        case 'image': #>
-                                            <# if (item.divider_image && item.divider_image.url) { #>
-                                                <div class="ababil-page-header-divider-image">
-                                                    <img src="{{ item.divider_image.url }}" alt="" style="width: {{ item.divider_image_width.size }}{{ item.divider_image_width.unit }};">
-                                                </div>
-                                            <# } #>
-                                            <# break;
-                                            
-                                        case 'text': #>
-                                            <# if (item.divider_text) { #>
-                                                <div class="ababil-page-header-divider-text" style="color: {{ item.divider_text_color }};">
-                                                    {{{ item.divider_text }}}
-                                                </div>
-                                            <# } #>
-                                            <# break;
-                                    } #>
-                                </div>
-                                <# break;
-                        } #>
-                    <# }); #>
-                <# } #>
+                                    
+                                    <# if (title_content) { #>
+                                        <{{ title_tag }} class="ababil-page-header-title" style="color: {{ settings.title_color }}; margin: {{ settings.title_margin.top }}{{ settings.title_margin.unit }} {{ settings.title_margin.right }}{{ settings.title_margin.unit }} {{ settings.title_margin.bottom }}{{ settings.title_margin.unit }} {{ settings.title_margin.left }}{{ settings.title_margin.unit }};">
+                                            {{{ title_content }}}
+                                        </{{ title_tag }}>
+                                    <# } #>
+                                    <# break;
+                                    
+                                case 'description': #>
+                                    <div class="ababil-page-header-description" style="color: {{ settings.description_color }}; margin-bottom: {{ settings.description_spacing.size }}{{ settings.description_spacing.unit }};">
+                                        <# if (item.description_type === 'custom' && item.custom_description) { #>
+                                            {{{ item.custom_description }}}
+                                        <# } else { #>
+                                            <?php echo esc_html__('This is a sample page description that would be dynamically pulled from the page content.', 'ababil'); ?>
+                                        <# } #>
+                                    </div>
+                                    <# break;
+                                    
+                                case 'divider': #>
+                                    <div class="ababil-page-header-divider" style="margin: {{ settings.divider_margin.top }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.right }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.bottom }}{{ settings.divider_margin.unit }} {{ settings.divider_margin.left }}{{ settings.divider_margin.unit }}; justify-content: {{ settings.divider_alignment }};">
+                                        <# switch(item.divider_type) {
+                                            case 'line': #>
+                                                <div class="ababil-page-header-divider-line" style="background-color: {{ item.divider_line_color }}; height: {{ item.divider_line_height.size }}{{ item.divider_line_height.unit }}; width: {{ item.divider_line_width.size }}{{ item.divider_line_width.unit }};"></div>
+                                                <# break;
+                                                
+                                            case 'icon': #>
+                                                <# if (item.divider_icon && item.divider_icon.value) { #>
+                                                    <div class="ababil-page-header-divider-icon" style="color: {{ item.divider_icon_color }};">
+                                                        <# var dividerIconHTML = elementor.helpers.renderIcon(view, item.divider_icon, { 'aria-hidden': true }, 'i', 'object'); #>
+                                                        {{{ dividerIconHTML.value }}}
+                                                    </div>
+                                                <# } #>
+                                                <# break;
+                                                
+                                            case 'image': #>
+                                                <# if (item.divider_image && item.divider_image.url) { #>
+                                                    <div class="ababil-page-header-divider-image">
+                                                        <img src="{{ item.divider_image.url }}" alt="" style="width: {{ item.divider_image_width.size }}{{ item.divider_image_width.unit }};">
+                                                    </div>
+                                                <# } #>
+                                                <# break;
+                                                
+                                            case 'text': #>
+                                                <# if (item.divider_text) { #>
+                                                    <div class="ababil-page-header-divider-text" style="color: {{ item.divider_text_color }};">
+                                                        {{{ item.divider_text }}}
+                                                    </div>
+                                                <# } #>
+                                                <# break;
+                                        } #>
+                                    </div>
+                                    <# break;
+                            } #>
+                        <# }); #>
+                    <# } #>
+                </div>
             </div>
         </div>
         <?php

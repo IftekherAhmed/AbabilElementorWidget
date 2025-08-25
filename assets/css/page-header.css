@@ -20,6 +20,17 @@
 }
 
 .ababil-page-header-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: var(--content-vertical-alignment, center);
+    width: 100%;
+}
+
+.ababil-page-header-content-inner {
+    margin: 0 auto;
+}
+
+.ababil-page-header-content {
     position: relative;
     z-index: 2;
     display: flex;
