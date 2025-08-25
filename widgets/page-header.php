@@ -1573,34 +1573,51 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         switch ($settings['title_source']) {
             case 'custom':
                 $title_content = $settings['custom_title'];
+                // If custom title is empty, fall back to default
+                if (empty($title_content)) {
+                    $title_content = $this->get_default_title();
+                }
                 break;
                 
             case 'dynamic':
                 $title_content = $settings['dynamic_tag'];
                 // Process shortcodes and dynamic tags
                 $title_content = do_shortcode($title_content);
+                // If dynamic content is empty, fall back to default
+                if (empty($title_content)) {
+                    $title_content = $this->get_default_title();
+                }
                 break;
                 
             case 'default':
             default:
-                if (is_singular()) {
-                    $title_content = get_the_title();
-                } else if (is_archive()) {
-                    $title_content = get_the_archive_title();
-                } else if (is_search()) {
-                    $title_content = sprintf(esc_html__('Search Results for: %s', 'ababil'), get_search_query());
-                } else if (is_404()) {
-                    $title_content = esc_html__('Page Not Found', 'ababil');
-                } else {
-                    $title_content = get_bloginfo('name');
-                }
+                $title_content = $this->get_default_title();
                 break;
         }
         
-        // Output the title
-        echo '<' . $title_tag . ' class="ababil-page-header-title">';
-        echo wp_kses_post($title_content);
-        echo '</' . $title_tag . '>';
+        // Output the title only if we have content
+        if (!empty($title_content)) {
+            echo '<' . $title_tag . ' class="ababil-page-header-title">';
+            echo wp_kses_post($title_content);
+            echo '</' . $title_tag . '>';
+        }
+    }
+
+    /**
+     * Get default title based on context
+     */
+    private function get_default_title() {
+        if (is_singular()) {
+            return get_the_title();
+        } else if (is_archive()) {
+            return get_the_archive_title();
+        } else if (is_search()) {
+            return sprintf(esc_html__('Search Results for: %s', 'ababil'), get_search_query());
+        } else if (is_404()) {
+            return esc_html__('Page Not Found', 'ababil');
+        } else {
+            return get_bloginfo('name');
+        }
     }
 
     /**
@@ -1617,16 +1634,13 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
         $description = '';
         
         if ($settings['description_type'] === 'excerpt') {
-            if (is_singular()) {
-                $description = get_the_excerpt();
-                if (empty($description) && !empty($settings['excerpt_fallback'])) {
-                    $description = $settings['excerpt_fallback'];
-                }
-            } elseif (!empty($settings['excerpt_fallback'])) {
-                $description = $settings['excerpt_fallback'];
-            }
+            $description = $this->get_page_excerpt($settings['excerpt_fallback']);
         } elseif ($settings['description_type'] === 'custom') {
             $description = $settings['custom_description'];
+            // If custom description is empty, fall back to excerpt
+            if (empty($description)) {
+                $description = $this->get_page_excerpt($settings['excerpt_fallback']);
+            }
         }
         
         if (!empty($description)) {
@@ -1634,6 +1648,21 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
             echo wp_kses_post($description);
             echo '</div>';
         }
+    }
+
+    /**
+     * Get page excerpt with fallback
+     */
+    private function get_page_excerpt($fallback = '') {
+        if (is_singular()) {
+            $excerpt = get_the_excerpt();
+            if (!empty($excerpt)) {
+                return $excerpt;
+            }
+        }
+        
+        // Return fallback text if no excerpt found
+        return !empty($fallback) ? $fallback : '';
     }
 
     /**
@@ -1728,15 +1757,20 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
                                 
                             case 'title': #>
                                 <# var title_tag = elementor.helpers.validateHTMLTag(item.title_html_tag) || 'h1'; #>
-                                <{{ title_tag }} class="ababil-page-header-title" style="color: {{ settings.title_color }}; margin: {{ settings.title_margin.top }}{{ settings.title_margin.unit }} {{ settings.title_margin.right }}{{ settings.title_margin.unit }} {{ settings.title_margin.bottom }}{{ settings.title_margin.unit }} {{ settings.title_margin.left }}{{ settings.title_margin.unit }};">
-                                    <# if (item.title_source === 'custom' && item.custom_title) { #>
-                                        {{{ item.custom_title }}}
-                                    <# } else if (item.title_source === 'dynamic' && item.dynamic_tag) { #>
-                                        {{{ item.dynamic_tag }}}
-                                    <# } else { #>
-                                        <?php echo esc_html__('Page Title', 'ababil'); ?>
-                                    <# } #>
-                                </{{ title_tag }}>
+                                <# var title_content = ''; #>
+                                <# if (item.title_source === 'custom' && item.custom_title) { #>
+                                    <# title_content = item.custom_title; #>
+                                <# } else if (item.title_source === 'dynamic' && item.dynamic_tag) { #>
+                                    <# title_content = item.dynamic_tag; #>
+                                <# } else { #>
+                                    <# title_content = '<?php echo esc_html__('Page Title', 'ababil'); ?>'; #>
+                                <# } #>
+                                
+                                <# if (title_content) { #>
+                                    <{{ title_tag }} class="ababil-page-header-title" style="color: {{ settings.title_color }}; margin: {{ settings.title_margin.top }}{{ settings.title_margin.unit }} {{ settings.title_margin.right }}{{ settings.title_margin.unit }} {{ settings.title_margin.bottom }}{{ settings.title_margin.unit }} {{ settings.title_margin.left }}{{ settings.title_margin.unit }};">
+                                        {{{ title_content }}}
+                                    </{{ title_tag }}>
+                                <# } #>
                                 <# break;
                                 
                             case 'description': #>
