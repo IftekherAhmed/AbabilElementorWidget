@@ -1,8 +1,12 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+    exit; // Exit if accessed directly.
 }
 
+/**
+ * Ababil Menu Accordion Widget for Elementor
+ */
 class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
 
     public function get_name() {

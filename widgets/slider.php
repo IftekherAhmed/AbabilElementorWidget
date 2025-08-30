@@ -1,8 +1,12 @@
 <?php
-if (!defined('ABSPATH')) {
-    exit;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
 }
 
+/**
+ * Ababil Slider Widget for Elementor
+ */
 class Ababil_Slider_Widget extends \Elementor\Widget_Base {
 
     public function get_name() {
