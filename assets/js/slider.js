@@ -1,194 +1,175 @@
-jQuery(document).ready(function($) {
+(function($) {
     function initSlider($slider) {
-        var slides = $slider.find('.ababil-slide');
-        var currentIndex = 0;
-        var autoplay = $slider.data('autoplay') === 'yes';
-        var autoplaySpeed = parseInt($slider.data('autoplay-speed')) || 5000;
-        var isAnimating = false;
-        var autoplayInterval = null;
-
-        function animateElement($element) {
-            var animation = $element.data('animation');
-            var duration = parseInt($element.data('duration')) || 1000;
-            var delay = parseInt($element.data('delay')) || 0;
-
-            if (animation && animation !== 'none') {
-                $element.css({
-                    'opacity': 0,
-                    'visibility': 'hidden',
-                    'animation': 'none'
-                }).delay(delay).queue(function(next) {
-                    $element.css({
-                        'opacity': 1,
-                        'visibility': 'visible',
-                        'animation': `${animation} ${duration}ms ease-in-out`
-                    });
-                    next();
-                });
-            } else {
-                $element.css({
-                    'opacity': 1,
-                    'visibility': 'visible',
-                    'animation': 'none'
-                });
-            }
+        if ($slider.hasClass('ababil-slider-initialized')) {
+            return;
         }
 
-        function showSlide(index) {
-            if (isAnimating || index === currentIndex || index < 0 || index >= slides.length) return;
+        var $wrapper = $slider.find('.ababil-slider-wrapper');
+        var $slides = $wrapper.find('.ababil-slide');
+        var $pagination = $slider.find('.ababil-slider-pagination');
+        var $dots = $pagination.find('.ababil-pagination-dot');
+        var $navPrev = $slider.find('.ababil-nav-prev');
+        var $navNext = $slider.find('.ababil-nav-next');
+        var settings = {
+            autoplay: $slider.data('autoplay') === 'yes',
+            autoplaySpeed: parseInt($slider.data('autoplay-speed')) || 5000,
+            loop: $slider.data('loop') === 'yes',
+            pauseOnHover: $slider.data('pause-on-hover') === 'yes',
+            transitionSpeed: parseInt($slider.data('transition-speed')) || 1000
+        };
+        var currentIndex = 0;
+        var autoplayInterval = null;
+        var isAnimating = false;
+
+        function applyTransition($slide, transitionType) {
+            $slide.removeClass('transition-slide transition-fade transition-zoom transition-flip');
+            $slide.addClass('transition-' + transitionType);
+        }
+
+        function goToSlide(index) {
+            if (isAnimating || index === currentIndex) return;
             isAnimating = true;
 
-            var $currentSlide = $(slides[currentIndex]);
-            var $nextSlide = $(slides[index]);
-            var transitionEffect = $nextSlide.data('transition');
+            var $currentSlide = $slides.eq(currentIndex);
+            var $nextSlide = $slides.eq(index);
+            var transitionType = $nextSlide.data('transition') || 'slide';
 
-            // Hide current slide
-            $currentSlide.removeClass('active').css({
-                'opacity': 0,
-                'visibility': 'hidden',
-                'transform': 'none',
-                'z-index': 9
-            }).find('[data-animation]').css({
-                'opacity': 0,
-                'visibility': 'hidden',
-                'animation': 'none'
-            });
+            // Remove active class and transition from current slide
+            $currentSlide.removeClass('active');
+            $dots.eq(currentIndex).removeClass('active');
 
-            // Prepare next slide
-            $nextSlide.addClass('active').css({
-                'opacity': 0,
-                'visibility': 'visible',
-                'z-index': 10
-            });
+            // Apply transition class to next slide
+            applyTransition($nextSlide, transitionType);
 
-            // Apply transition effect
-            switch (transitionEffect) {
-                case 'fade':
-                    $nextSlide.animate({ opacity: 1 }, 1000, function() {
-                        isAnimating = false;
-                    });
-                    break;
-                case 'slide':
-                    $nextSlide.css('transform', 'translateX(100%)').animate({
-                        opacity: 1,
-                        transform: 'translateX(0)'
-                    }, 1000, 'easeInOutQuad', function() {
-                        isAnimating = false;
-                    });
-                    break;
-                case 'cube':
-                    $nextSlide.css({
-                        'transform': 'rotateY(90deg)',
-                        'opacity': 0
-                    }).animate({
-                        opacity: 1,
-                        transform: 'rotateY(0deg)'
-                    }, 1000, 'easeInOutQuad', function() {
-                        isAnimating = false;
-                    });
-                    break;
-                case 'coverflow':
-                    $nextSlide.css({
-                        'transform': 'scale(0.8) rotateY(45deg)',
-                        'opacity': 0
-                    }).animate({
-                        opacity: 1,
-                        transform: 'scale(1) rotateY(0deg)'
-                    }, 1000, 'easeInOutQuad', function() {
-                        isAnimating = false;
-                    });
-                    break;
-                case 'flip':
-                    $nextSlide.css({
-                        'transform': 'rotateY(180deg)',
-                        'opacity': 0
-                    }).animate({
-                        opacity: 1,
-                        transform: 'rotateY(0deg)'
-                    }, 1000, 'easeInOutQuad', function() {
-                        isAnimating = false;
-                    });
-                    break;
-                case 'zoom':
-                    $nextSlide.css({
-                        'transform': 'scale(0.5)',
-                        'opacity': 0
-                    }).animate({
-                        opacity: 1,
-                        transform: 'scale(1)'
-                    }, 1000, 'easeInOutQuad', function() {
-                        isAnimating = false;
-                    });
-                    break;
-                default:
-                    $nextSlide.css({
-                        'opacity': 1,
-                        'visibility': 'visible'
-                    });
-                    isAnimating = false;
-                    break;
-            }
+            // Set next slide as active
+            $nextSlide.addClass('active');
+            $dots.eq(index).addClass('active');
 
-            // Animate content elements
+            // Trigger content animations
             $nextSlide.find('[data-animation]').each(function() {
-                animateElement($(this));
+                var $elem = $(this);
+                var animation = $elem.data('animation');
+                var duration = parseInt($elem.data('duration')) || 1000;
+                var delay = parseInt($elem.data('delay')) || 0;
+
+                if (animation !== 'none') {
+                    $elem.css({
+                        'animation-name': animation,
+                        'animation-duration': duration + 'ms',
+                        'animation-delay': delay + 'ms',
+                        'animation-fill-mode': 'both'
+                    });
+                }
             });
 
+            // Update current index
             currentIndex = index;
+
+            // Reset animation flag after transition
+            setTimeout(function() {
+                isAnimating = false;
+                // Reset animation styles after transition
+                $nextSlide.find('[data-animation]').css({
+                    'animation-name': '',
+                    'animation-duration': '',
+                    'animation-delay': '',
+                    'animation-fill-mode': ''
+                });
+            }, settings.transitionSpeed);
         }
 
         function nextSlide() {
-            var nextIndex = (currentIndex + 1) % slides.length;
-            showSlide(nextIndex);
+            var nextIndex = currentIndex + 1;
+            if (nextIndex >= $slides.length) {
+                nextIndex = settings.loop ? 0 : currentIndex;
+            }
+            goToSlide(nextIndex);
+        }
+
+        function prevSlide() {
+            var prevIndex = currentIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = settings.loop ? $slides.length - 1 : currentIndex;
+            }
+            goToSlide(prevIndex);
+        }
+
+        function startAutoplay() {
+            if (settings.autoplay && !autoplayInterval) {
+                autoplayInterval = setInterval(nextSlide, settings.autoplaySpeed);
+            }
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
         }
 
         // Initialize first slide
-        slides.removeClass('active').css({
-            'opacity': 0,
-            'visibility': 'hidden',
-            'z-index': 9
-        });
-        $(slides[0]).addClass('active').css({
-            'opacity': 1,
-            'visibility': 'visible',
-            'z-index': 10
-        });
-        $(slides[0]).find('[data-animation]').each(function() {
-            animateElement($(this));
+        applyTransition($slides.eq(0), $slides.eq(0).data('transition') || 'slide');
+        $slides.eq(0).addClass('active');
+        $dots.eq(0).addClass('active');
+        $slides.eq(0).find('[data-animation]').each(function() {
+            var $elem = $(this);
+            var animation = $elem.data('animation');
+            var duration = parseInt($elem.data('duration')) || 1000;
+            var delay = parseInt($elem.data('delay')) || 0;
+
+            if (animation !== 'none') {
+                $elem.css({
+                    'animation-name': animation,
+                    'animation-duration': duration + 'ms',
+                    'animation-delay': delay + 'ms',
+                    'animation-fill-mode': 'both'
+                });
+            }
         });
 
-        // Autoplay
-        if (autoplay) {
-            autoplayInterval = setInterval(nextSlide, autoplaySpeed);
+        // Event handlers
+        $navNext.on('click', nextSlide);
+        $navPrev.on('click', prevSlide);
+
+        $dots.on('click', function() {
+            var index = $(this).data('index');
+            goToSlide(index);
+        });
+
+        if (settings.pauseOnHover) {
+            $slider.on('mouseenter', stopAutoplay).on('mouseleave', startAutoplay);
         }
 
-        // Handle Elementor preview updates
-        $slider.on('elementor/frontend/init', function() {
-            slides.removeClass('active').css({
-                'opacity': 0,
-                'visibility': 'hidden',
-                'z-index': 9
-            });
-            showSlide(0);
-        });
+        // Start autoplay
+        startAutoplay();
 
-        // Stop autoplay on user interaction
-        $slider.on('mouseenter', function() {
-            if (autoplayInterval) clearInterval(autoplayInterval);
-        }).on('mouseleave', function() {
-            if (autoplay) {
-                autoplayInterval = setInterval(nextSlide, autoplaySpeed);
-            }
+        // Prevent multiple initializations
+        $slider.addClass('ababil-slider-initialized');
+
+        // Clean up on Elementor widget update
+        $slider.on('destroy', function() {
+            stopAutoplay();
+            $navNext.off('click');
+            $navPrev.off('click');
+            $dots.off('click');
+            $slider.off('mouseenter mouseleave');
+            $slider.removeClass('ababil-slider-initialized');
         });
     }
 
-    // Initialize sliders
-    $('.ababil-slider').each(function() {
-        initSlider($(this));
+    $(document).ready(function() {
+        $('.ababil-slider').each(function() {
+            initSlider($(this));
+        });
     });
 
-    // Re-initialize on Elementor preview changes
-    elementorFrontend.hooks.addAction('frontend/element_ready/ababil-slider.default', function($scope) {
-        initSlider($scope.find('.ababil-slider'));
+    // Reinitialize on Elementor frontend init
+    $(window).on('elementor/frontend/init', function() {
+        elementorFrontend.hooks.addAction('frontend/element_ready/ababil-slider.default', function($scope) {
+            $scope.find('.ababil-slider').each(function() {
+                $(this).trigger('destroy');
+                initSlider($(this));
+            });
+        });
     });
-});
+})(jQuery);

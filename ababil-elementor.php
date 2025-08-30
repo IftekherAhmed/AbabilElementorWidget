@@ -1,151 +1,63 @@
 <?php
 /**
- * Plugin Name: Ababil Elementor Widgets
- * Description: Custom Elementor widgets for styled text, content boxes, ACF repeater accordions, breadcrumbs, and more.
+ * Plugin Name: Ababil Elementor Addons
+ * Description: Custom Elementor widgets for Ababil
  * Version: 1.0.0
- * Author: Khan Iftekher Ahmed
- * Author URI: https://about.me/iftekherahmed/
- * Text Domain: ababil
- * License: GPLv2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 5.0
- * Tested up to: 6.6
- * Requires PHP: 7.4
+ * Author: Your Name
+ * License: GPL-2.0+
  */
 
-defined( 'ABSPATH' ) || exit;
-
-// Register custom widget category
-add_action( 'elementor/elements/categories_registered', 'add_ababil_widget_category' );
-function add_ababil_widget_category( $elements_manager ) {
-    $elements_manager->add_category(
-        'ababil',
-        [
-            'title' => __( 'Ababil Widgets', 'ababil' ),
-            'icon'  => 'eicon-font',
-        ]
-    );
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-// Register custom widgets
-add_action( 'elementor/widgets/register', 'ababil_register_widgets' );
-function ababil_register_widgets( $widgets_manager ) {
-    require_once( __DIR__ . '/widgets/styled-text.php' );
-    $widgets_manager->register( new \Ababil_Styled_Text_Widget() );
+function ababil_elementor_addons() {
+    // Load plugin file
+    require_once plugin_dir_path(__FILE__) . 'widgets/slider.php';
 
-    require_once( __DIR__ . '/widgets/content-box.php' );
-    $widgets_manager->register( new \Ababil_Content_Box_Widget() );
-    
-    require_once( __DIR__ . '/widgets/acf-repeater-accordion.php' );
-    $widgets_manager->register( new \Ababil_ACF_Repeater_Accordion_Widget() );
+    // Register widget
+    add_action('elementor/widgets/register', function($widgets_manager) {
+        $widgets_manager->register(new \Ababil_Slider_Widget());
+    });
 
-    require_once( __DIR__ . '/widgets/breadcrumb.php' );
-    $widgets_manager->register( new \Ababil_Breadcrumb_Widget() );
+    // Register scripts and styles
+    add_action('wp_enqueue_scripts', function() {
+        wp_enqueue_style(
+            'ababil-slider',
+            plugin_dir_url(__FILE__) . 'assets/css/slider.css',
+            [],
+            '1.0.0'
+        );
 
-    require_once( __DIR__ . '/widgets/page-header.php' );
-    $widgets_manager->register( new \Ababil_Page_Header_Widget() );
+        wp_enqueue_script(
+            'ababil-slider',
+            plugin_dir_url(__FILE__) . 'assets/js/slider.js',
+            ['jquery'],
+            '1.0.0',
+            true
+        );
+    });
 
-    require_once( __DIR__ . '/widgets/code-injection.php' );
-    $widgets_manager->register( new \Ababil_Code_Injection_Widget() );
+    // Enqueue scripts and styles for Elementor editor
+    add_action('elementor/frontend/after_enqueue_styles', function() {
+        wp_enqueue_style(
+            'ababil-slider',
+            plugin_dir_url(__FILE__) . 'assets/css/slider.css',
+            [],
+            '1.0.0'
+        );
+    });
 
-    require_once( __DIR__ . '/widgets/menu-accordion.php' );
-    $widgets_manager->register( new \Ababil_Menu_Accordion_Widget() );
-
-    require_once( __DIR__ . '/widgets/slider.php' );
-    $widgets_manager->register( new \Ababil_Slider_Widget() );
+    add_action('elementor/frontend/after_register_scripts', function() {
+        wp_enqueue_script(
+            'ababil-slider',
+            plugin_dir_url(__FILE__) . 'assets/js/slider.js',
+            ['jquery'],
+            '1.0.0',
+            true
+        );
+    });
 }
 
-/* For Code Injection Widget */
-// Enable shortcode execution in Elementor preview
-add_filter('elementor/widget/render_content', function($content, $widget) {
-    if ($widget->get_name() === 'ababil-code-injection') {
-        // Process shortcodes in the preview content
-        $content = do_shortcode($content);
-    }
-    return $content;
-}, 10, 2);
-
-// Add filter for shortcode preview in editor
-add_filter('ababil_shortcode_preview', function($shortcode) {
-    return do_shortcode($shortcode);
-});
-// End For the Code Injection Widget
-
-
-// Register assets (CSS)
-add_action( 'elementor/frontend/after_register_styles', function() {
-    wp_register_style(
-        'ababil-styled-text',
-        plugins_url( '/assets/css/styled-text.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-content-box',
-        plugins_url( '/assets/css/content-box.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-acf-repeater-accordion',
-        plugins_url( '/assets/css/acf-repeater-accordion.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-breadcrumb',
-        plugins_url( '/assets/css/breadcrumb.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-page-header',
-        plugins_url( '/assets/css/page-header.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-menu-accordion',
-        plugins_url( '/assets/css/menu-accordion.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-    wp_register_style(
-        'ababil-slider',
-        plugins_url( '/assets/css/slider.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
-
-    // External libraries
-    wp_register_style( 'swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], '11.0.0' );
-    wp_register_style( 'animate-css', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css', [], '4.1.1' );
-} );
-
-// Register assets (JS)
-add_action( 'elementor/frontend/after_register_scripts', function() {
-    wp_register_script(
-        'ababil-acf-repeater-accordion',
-        plugins_url( '/assets/js/acf-repeater-accordion.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-menu-accordion',
-        plugins_url( '/assets/js/menu-accordion.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-slider',
-        plugins_url( '/assets/js/slider.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-
-    // External libraries
-    wp_register_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], '11.0.0', true );
-} );
+add_action('plugins_loaded', 'ababil_elementor_addons');
+?>
