@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Ababil Elementor Widgets
  * Description: Custom Elementor widgets for styled text, content boxes, ACF repeater accordions, breadcrumbs, and more.
- * Version: 1.0.3
+ * Version: 1.0.0
  * Author: Khan Iftekher Ahmed
  * Author URI: https://about.me/iftekherahmed/
  * Text Domain: ababil
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 5.0 (minimum WP version)
- * Tested up to: 6.6 (latest WP version)
+ * Requires at least: 5.0
+ * Tested up to: 6.6
  * Requires PHP: 7.4
  */
 
@@ -27,7 +27,7 @@ function add_ababil_widget_category( $elements_manager ) {
     );
 }
 
-// Register the widgets
+// Register custom widgets
 add_action( 'elementor/widgets/register', 'ababil_register_widgets' );
 function ababil_register_widgets( $widgets_manager ) {
     require_once( __DIR__ . '/widgets/styled-text.php' );
@@ -50,6 +50,9 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/menu-accordion.php' );
     $widgets_manager->register( new \Ababil_Menu_Accordion_Widget() );
+
+    require_once( __DIR__ . '/widgets/slider.php' );
+    $widgets_manager->register( new \Ababil_Slider_Widget() );
 }
 
 /* For Code Injection Widget */
@@ -107,6 +110,16 @@ add_action( 'elementor/frontend/after_register_styles', function() {
         [],
         '1.0.0'
     );
+    wp_register_style(
+        'ababil-slider',
+        plugins_url( '/assets/css/slider.css', __FILE__ ),
+        [],
+        '1.0.0'
+    );
+
+    // External libraries
+    wp_register_style( 'swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], '11.0.0' );
+    wp_register_style( 'animate-css', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css', [], '4.1.1' );
 } );
 
 // Register assets (JS)
@@ -125,4 +138,14 @@ add_action( 'elementor/frontend/after_register_scripts', function() {
         '1.0.0',
         true
     );
+    wp_register_script(
+        'ababil-slider',
+        plugins_url( '/assets/js/slider.js', __FILE__ ),
+        [ 'jquery' ],
+        '1.0.0',
+        true
+    );
+
+    // External libraries
+    wp_register_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], '11.0.0', true );
 } );
