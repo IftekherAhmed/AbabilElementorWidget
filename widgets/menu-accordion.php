@@ -106,14 +106,16 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
-            'show_child_indicators',
+            'indicator_display',
             [
-                'label' => __( 'Show Child Indicators', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __( 'Yes', 'ababil' ),
-                'label_off' => __( 'No', 'ababil' ),
-                'return_value' => 'yes',
-                'default' => 'yes',
+                'label' => __( 'Show Indicators For', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'both' => __( 'Both Parent and Child', 'ababil' ),
+                    'parent' => __( 'Parent Only', 'ababil' ),
+                    'child' => __( 'Child Only', 'ababil' ),
+                ],
+                'default' => 'both',
                 'condition' => [
                     'show_indicators' => 'yes',
                 ],
@@ -144,6 +146,19 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                     'all_open' => __( 'All items open', 'ababil' ),
                 ],
                 'default' => 'all_closed',
+            ]
+        );
+
+        $this->add_control(
+            'open_submenu_on_active',
+            [
+                'label' => __( 'Open Submenu on Active', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __( 'Yes', 'ababil' ),
+                'label_off' => __( 'No', 'ababil' ),
+                'return_value' => 'yes',
+                'default' => 'no',
+                'description' => __( 'Automatically open submenu when a submenu item is active.', 'ababil' ),
             ]
         );
 
@@ -317,68 +332,11 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->end_controls_tab();
-
-        $this->start_controls_tab( 'menu_item_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
-
-        $this->add_control(
-            'menu_item_hover_color',
-            [
-                'label' => __( 'Text Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-header:hover a' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'menu_item_hover_background',
-            [
-                'label' => __( 'Background Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-header:hover' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab( 'menu_item_active', [ 'label' => __( 'Active', 'ababil' ) ] );
-
-        $this->add_control(
-            'menu_item_active_color',
-            [
-                'label' => __( 'Text Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header a' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'menu_item_active_background',
-            [
-                'label' => __( 'Background Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->end_controls_tabs();
-
         $this->add_group_control(
             \Elementor\Group_Control_Border::get_type(),
             [
                 'name' => 'menu_item_border',
                 'selector' => '{{WRAPPER}} .ababil-menu-accordion-header',
-                'separator' => 'before',
             ]
         );
 
@@ -426,6 +384,166 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'menu_item_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
+
+        $this->add_control(
+            'menu_item_hover_color',
+            [
+                'label' => __( 'Text Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-header:hover a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'menu_item_hover_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-header:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'menu_item_border_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-header:hover',
+            ]
+        );
+
+        $this->add_control(
+            'menu_item_border_radius_hover',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-header:hover' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'menu_item_padding_hover',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-header:hover' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'menu_item_margin_hover',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-header:hover' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'menu_item_box_shadow_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-header:hover',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'menu_item_active', [ 'label' => __( 'Active', 'ababil' ) ] );
+
+        $this->add_control(
+            'menu_item_active_color',
+            [
+                'label' => __( 'Text Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'menu_item_active_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'menu_item_border_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->add_control(
+            'menu_item_border_radius_active',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'menu_item_padding_active',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'menu_item_margin_active',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'menu_item_box_shadow_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -435,6 +553,10 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
+
+        $this->start_controls_tabs( 'submenu_tabs' );
+
+        $this->start_controls_tab( 'submenu_normal', [ 'label' => __( 'Normal', 'ababil' ) ] );
 
         $this->add_control(
             'submenu_background',
@@ -480,6 +602,97 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_responsive_control(
+            'submenu_margin',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'submenu_box_shadow',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'submenu_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
+
+        $this->add_control(
+            'submenu_hover_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'submenu_border_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu:hover',
+            ]
+        );
+
+        $this->add_control(
+            'submenu_border_radius_hover',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu:hover' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_padding_hover',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu:hover' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_margin_hover',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu:hover' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'submenu_box_shadow_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu:hover',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
+        $this->add_responsive_control(
             'submenu_indent',
             [
                 'label' => __( 'Indent', 'ababil' ),
@@ -491,14 +704,6 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-list' => 'padding-left: {{SIZE}}{{UNIT}};',
                 ],
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Box_Shadow::get_type(),
-            [
-                'name' => 'submenu_box_shadow',
-                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu',
             ]
         );
 
@@ -568,68 +773,11 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->end_controls_tab();
-
-        $this->start_controls_tab( 'toggle_icon_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
-
-        $this->add_control(
-            'toggle_icon_hover_color',
-            [
-                'label' => __( 'Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'toggle_icon_hover_background',
-            [
-                'label' => __( 'Background Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab( 'toggle_icon_active', [ 'label' => __( 'Active', 'ababil' ) ] );
-
-        $this->add_control(
-            'toggle_icon_active_color',
-            [
-                'label' => __( 'Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'toggle_icon_active_background',
-            [
-                'label' => __( 'Background Color', 'ababil' ),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->end_controls_tabs();
-
         $this->add_group_control(
             \Elementor\Group_Control_Border::get_type(),
             [
                 'name' => 'toggle_icon_border',
                 'selector' => '{{WRAPPER}} .ababil-menu-accordion-toggle',
-                'separator' => 'before',
             ]
         );
 
@@ -677,6 +825,166 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'toggle_icon_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
+
+        $this->add_control(
+            'toggle_icon_hover_color',
+            [
+                'label' => __( 'Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'toggle_icon_hover_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'toggle_icon_border_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-toggle:hover',
+            ]
+        );
+
+        $this->add_control(
+            'toggle_icon_border_radius_hover',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'toggle_icon_padding_hover',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'toggle_icon_margin_hover',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle:hover' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'toggle_icon_box_shadow_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-toggle:hover',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'toggle_icon_active', [ 'label' => __( 'Active', 'ababil' ) ] );
+
+        $this->add_control(
+            'toggle_icon_active_color',
+            [
+                'label' => __( 'Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'toggle_icon_active_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'toggle_icon_border_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle',
+            ]
+        );
+
+        $this->add_control(
+            'toggle_icon_border_radius_active',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'toggle_icon_padding_active',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'toggle_icon_margin_active',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'toggle_icon_box_shadow_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-item.active .ababil-menu-accordion-toggle',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -695,6 +1003,45 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             [
                 'name' => 'indicator_typography',
                 'selector' => '{{WRAPPER}} .ababil-menu-indicator',
+                'condition' => [
+                    'indicator_type!' => 'icon',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'indicator_icon_size',
+            [
+                'label' => __( 'Icon Size', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-indicator i' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-menu-indicator svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'indicator_type' => 'icon',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'indicator_vertical_align',
+            [
+                'label' => __( 'Vertical Alignment', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', '%', 'em' ],
+                'range' => [
+                    'px' => [ 'min' => -50, 'max' => 50 ],
+                    '%' => [ 'min' => -100, 'max' => 100 ],
+                    'em' => [ 'min' => -5, 'max' => 5 ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-indicator' => 'top: {{SIZE}}{{UNIT}}; position: relative;',
+                ],
+                'condition' => [
+                    'indicator_type' => 'icon',
+                ],
             ]
         );
 
@@ -763,7 +1110,11 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         $accordion_id = 'ababil-menu-accordion-' . $this->get_id();
 
         ?>
-        <div class="ababil-menu-accordion" id="<?php echo esc_attr( $accordion_id ); ?>" data-behavior="<?php echo esc_attr( $settings['accordion_behavior'] ); ?>" data-default-state="<?php echo esc_attr( $settings['default_state'] ); ?>" data-icon-position="<?php echo esc_attr( $settings['icon_position'] ); ?>">
+        <div class="ababil-menu-accordion" id="<?php echo esc_attr( $accordion_id ); ?>" 
+             data-behavior="<?php echo esc_attr( $settings['accordion_behavior'] ); ?>" 
+             data-default-state="<?php echo esc_attr( $settings['default_state'] ); ?>" 
+             data-icon-position="<?php echo esc_attr( $settings['icon_position'] ); ?>" 
+             data-open-submenu-on-active="<?php echo esc_attr( $settings['open_submenu_on_active'] ); ?>">
             <?php echo $menu_html; ?>
         </div>
         <?php
@@ -776,15 +1127,20 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         var iconPosition = settings.icon_position || 'right';
         var behavior = settings.accordion_behavior || 'accordion';
         var defaultState = settings.default_state || 'all_closed';
+        var openSubmenuOnActive = settings.open_submenu_on_active === 'yes';
         var accordionID = 'ababil-menu-accordion-' + view.getID();
         var iconHTML = elementor.helpers.renderIcon(view, settings.icon, { 'aria-hidden': true }, 'i', 'object' );
         var activeIconHTML = elementor.helpers.renderIcon(view, settings.active_icon, { 'aria-hidden': true }, 'i', 'object' );
         var indicatorType = settings.indicator_type || 'numbers';
         var showIndicators = settings.show_indicators === 'yes';
-        var showChildIndicators = settings.show_child_indicators === 'yes';
+        var indicatorDisplay = settings.indicator_display || 'both';
         #>
         
-        <div class="ababil-menu-accordion" id="{{ accordionID }}" data-behavior="{{ behavior }}" data-default-state="{{ defaultState }}" data-icon-position="{{ iconPosition }}">
+        <div class="ababil-menu-accordion" id="{{ accordionID }}" 
+             data-behavior="{{ behavior }}" 
+             data-default-state="{{ defaultState }}" 
+             data-icon-position="{{ iconPosition }}" 
+             data-open-submenu-on-active="{{ openSubmenuOnActive }}">
             <# if ( menu ) { #>
                 <ul class="ababil-menu-accordion-list">
                     <# var isActive = (defaultState === 'all_open' || defaultState === 'first_open'); #>
@@ -797,10 +1153,14 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                                 </span>
                             <# } #>
                             <a href="#">
-                                <# if ( showIndicators ) { #>
+                                <# if ( showIndicators && (indicatorDisplay === 'both' || indicatorDisplay === 'parent') ) { #>
                                     <span class="ababil-menu-indicator">
                                         <# if ( indicatorType === 'icon' && settings.indicator_icon.value ) { #>
                                             {{{ elementor.helpers.renderIcon(view, settings.indicator_icon, { 'aria-hidden': true }, 'i', 'object').value }}}
+                                        <# } else if ( indicatorType === 'roman' ) { #>
+                                            I.
+                                        <# } else if ( indicatorType === 'alphabetic' ) { #>
+                                            A.
                                         <# } else { #>
                                             01.
                                         <# } #>
@@ -820,10 +1180,14 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                                 <li class="ababil-menu-accordion-item">
                                     <div class="ababil-menu-accordion-header">
                                         <a href="#">
-                                            <# if ( showIndicators && showChildIndicators ) { #>
+                                            <# if ( showIndicators && (indicatorDisplay === 'both' || indicatorDisplay === 'child') ) { #>
                                                 <span class="ababil-menu-indicator">
                                                     <# if ( indicatorType === 'icon' && settings.indicator_icon.value ) { #>
                                                         {{{ elementor.helpers.renderIcon(view, settings.indicator_icon, { 'aria-hidden': true }, 'i', 'object').value }}}
+                                                    <# } else if ( indicatorType === 'roman' ) { #>
+                                                        I.i.
+                                                    <# } else if ( indicatorType === 'alphabetic' ) { #>
+                                                        A.a.
                                                     <# } else { #>
                                                         01.01.
                                                     <# } #>
@@ -842,10 +1206,14 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                                             </span>
                                         <# } #>
                                         <a href="#">
-                                            <# if ( showIndicators && showChildIndicators ) { #>
+                                            <# if ( showIndicators && (indicatorDisplay === 'both' || indicatorDisplay === 'child') ) { #>
                                                 <span class="ababil-menu-indicator">
                                                     <# if ( indicatorType === 'icon' && settings.indicator_icon.value ) { #>
                                                         {{{ elementor.helpers.renderIcon(view, settings.indicator_icon, { 'aria-hidden': true }, 'i', 'object').value }}}
+                                                    <# } else if ( indicatorType === 'roman' ) { #>
+                                                        I.ii.
+                                                    <# } else if ( indicatorType === 'alphabetic' ) { #>
+                                                        A.b.
                                                     <# } else { #>
                                                         01.02.
                                                     <# } #>
@@ -878,10 +1246,14 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
                     <li class="ababil-menu-accordion-item">
                         <div class="ababil-menu-accordion-header">
                             <a href="#">
-                                <# if ( showIndicators ) { #>
+                                <# if ( showIndicators && (indicatorDisplay === 'both' || indicatorDisplay === 'parent') ) { #>
                                     <span class="ababil-menu-indicator">
                                         <# if ( indicatorType === 'icon' && settings.indicator_icon.value ) { #>
                                             {{{ elementor.helpers.renderIcon(view, settings.indicator_icon, { 'aria-hidden': true }, 'i', 'object').value }}}
+                                        <# } else if ( indicatorType === 'roman' ) { #>
+                                            II.
+                                        <# } else if ( indicatorType === 'alphabetic' ) { #>
+                                            B.
                                         <# } else { #>
                                             02.
                                         <# } #>
@@ -924,6 +1296,11 @@ class Ababil_Menu_Accordion_Walker extends Walker_Nav_Menu {
             $classes[] = 'menu-item-has-children';
         }
 
+        // Add current class for active menu item
+        if ( in_array( 'current-menu-item', $item->classes ) || in_array( 'current-menu-ancestor', $item->classes ) ) {
+            $classes[] = 'active';
+        }
+
         $class_names = implode( ' ', apply_filters( 'nav_menu_item_classes', array_filter( $classes ), $item, $args, $depth ) );
 
         $id = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args, $depth );
@@ -934,6 +1311,8 @@ class Ababil_Menu_Accordion_Walker extends Walker_Nav_Menu {
             if ( $this->settings['default_state'] === 'all_open' ) {
                 $is_active = true;
             } elseif ( $this->settings['default_state'] === 'first_open' && $depth === 0 && $this->get_counter( $depth ) === 1 ) {
+                $is_active = true;
+            } elseif ( $this->settings['open_submenu_on_active'] === 'yes' && in_array( 'current-menu-ancestor', $item->classes ) ) {
                 $is_active = true;
             }
         }
@@ -947,7 +1326,12 @@ class Ababil_Menu_Accordion_Walker extends Walker_Nav_Menu {
         $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '';
         $attributes .= ! empty( $item->url ) ? ' href="' . esc_url( $item->url ) . '"' : '';
 
-        $show_indicator = $this->settings['show_indicators'] === 'yes' && ( $depth === 0 || ( $depth > 0 && $this->settings['show_child_indicators'] === 'yes' ) );
+        $show_indicator = $this->settings['show_indicators'] === 'yes';
+        if ( $show_indicator ) {
+            $indicator_display = $this->settings['indicator_display'];
+            $show_indicator = ( $depth === 0 && ( $indicator_display === 'both' || $indicator_display === 'parent' ) ) ||
+                            ( $depth > 0 && ( $indicator_display === 'both' || $indicator_display === 'child' ) );
+        }
         $indicator = $show_indicator ? $this->get_indicator( $item, $depth, $args ) : '';
 
         $has_children = $args->walker->has_children;

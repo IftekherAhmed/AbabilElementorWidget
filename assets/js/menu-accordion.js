@@ -2,15 +2,23 @@ jQuery(document).ready(function($) {
     function initializeAccordion($accordion) {
         var behavior = $accordion.data('behavior') || 'toggle';
         var defaultState = $accordion.data('default-state') || 'all_closed';
+        var openSubmenuOnActive = $accordion.data('open-submenu-on-active') === 'yes';
 
         // Initialize active states
         $accordion.find('.ababil-menu-accordion-item').each(function() {
             var $item = $(this);
-            if ($item.hasClass('active')) {
+            var isActive = $item.hasClass('active') || 
+                          (defaultState === 'all_open') ||
+                          (defaultState === 'first_open' && $item.index() === 0 && !$item.parents('.ababil-menu-accordion-submenu').length) ||
+                          (openSubmenuOnActive && $item.hasClass('current-menu-ancestor'));
+
+            if (isActive) {
+                $item.addClass('active');
                 $item.find('> .ababil-menu-accordion-submenu').css('display', 'block');
                 $item.find('> .ababil-menu-accordion-header .ababil-menu-accordion-icon-normal').hide();
                 $item.find('> .ababil-menu-accordion-header .ababil-menu-accordion-icon-active').show();
             } else {
+                $item.removeClass('active');
                 $item.find('> .ababil-menu-accordion-submenu').css('display', 'none');
                 $item.find('> .ababil-menu-accordion-header .ababil-menu-accordion-icon-normal').show();
                 $item.find('> .ababil-menu-accordion-header .ababil-menu-accordion-icon-active').hide();
@@ -56,13 +64,13 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Handle Elementor preview updates
-    if (typeof elementor !== 'undefined') {
-        elementor.channels.editor.on('change', function(view) {
-            var $accordion = view.$el.find('.ababil-menu-accordion');
-            if ($accordion.length) {
-                initializeAccordion($accordion);
-            }
-        });
+    // For Elementor editor live preview
+    if ( window.elementor ) {
+        elementor.hooks.addAction( 'panel/open_editor/widget/ababil-menu-accordion', function( panel, model, view ) {
+            model.on( 'change', function() {
+                view.render();
+                initializeAccordion( view.$el.find('.ababil-menu-accordion') );
+            } );
+        } );
     }
 });

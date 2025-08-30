@@ -31,7 +31,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    position: relative;
     transition: all 0.3s ease;
 }
 
@@ -63,13 +62,7 @@
     margin-right: 10px;
 }
 
-.ababil-menu-accordion[data-icon-position="right"] .ababil-menu-accordion-header {
-    position: relative;
-}
-
 .ababil-menu-accordion[data-icon-position="right"] .ababil-menu-accordion-toggle {
-    position: absolute;
-    right: 0;
     margin-left: 10px;
 }
 
