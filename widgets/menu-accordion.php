@@ -525,6 +525,23 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_responsive_control(
+            'toggle_icon_vertical_align',
+            [
+                'label' => __( 'Vertical Alignment', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => [ 'px', '%', 'em' ],
+                'range' => [
+                    'px' => [ 'min' => -50, 'max' => 50 ],
+                    '%' => [ 'min' => -100, 'max' => 100 ],
+                    'em' => [ 'min' => -5, 'max' => 5 ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-toggle' => 'top: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
         $this->start_controls_tabs( 'toggle_icon_tabs' );
 
         $this->start_controls_tab( 'toggle_icon_normal', [ 'label' => __( 'Normal', 'ababil' ) ] );
