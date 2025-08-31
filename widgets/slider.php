@@ -30,10 +30,12 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_style_depends() {
+        wp_register_style('ababil-slider', plugins_url('slider.css', __FILE__));
         return ['ababil-slider'];
     }
 
     public function get_script_depends() {
+        wp_register_script('ababil-slider', plugins_url('slider.js', __FILE__), ['jquery'], '1.0.0', true);
         return ['jquery', 'ababil-slider'];
     }
 
@@ -79,7 +81,7 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'bottom right' => __('Bottom Right', 'ababil'),
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}} .ababil-slide-background' => 'background-position: {{VALUE}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}} .ababil-slide-background' => 'background-position: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -96,7 +98,7 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'contain' => __('Contain', 'ababil'),
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}} .ababil-slide-background' => 'background-size: {{VALUE}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}} .ababil-slide-background' => 'background-size: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -128,10 +130,41 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'slide',
                 'options' => [
-                    'slide' => __('Slide', 'ababil'),
+                    'slideup' => __('Slide Up', 'ababil'),
+                    'slidedown' => __('Slide Down', 'ababil'),
+                    'slideright' => __('Slide Right', 'ababil'),
+                    'slideleft' => __('Slide Left', 'ababil'),
+                    'slidehorizontal' => __('Slide Horizontal', 'ababil'),
+                    'slidevertical' => __('Slide Vertical', 'ababil'),
+                    'boxslide' => __('Box Slide', 'ababil'),
+                    'slotslide-horizontal' => __('Slot Slide Horizontal', 'ababil'),
+                    'slotslide-vertical' => __('Slot Slide Vertical', 'ababil'),
+                    'boxfade' => __('Box Fade', 'ababil'),
+                    'slotfade-horizontal' => __('Slot Fade Horizontal', 'ababil'),
+                    'slotfade-vertical' => __('Slot Fade Vertical', 'ababil'),
+                    'fadefromright' => __('Fade From Right', 'ababil'),
+                    'fadefromleft' => __('Fade From Left', 'ababil'),
+                    'fadefromtop' => __('Fade From Top', 'ababil'),
+                    'fadefrombottom' => __('Fade From Bottom', 'ababil'),
+                    'fadetoleftfadefromright' => __('Fade To Left, From Right', 'ababil'),
+                    'fadetorightfadefromleft' => __('Fade To Right, From Left', 'ababil'),
+                    'fadetotopfadefrombottom' => __('Fade To Top, From Bottom', 'ababil'),
+                    'fadetobottomfadefromtop' => __('Fade To Bottom, From Top', 'ababil'),
+                    'parallaxtoright' => __('Parallax To Right', 'ababil'),
+                    'parallaxtoleft' => __('Parallax To Left', 'ababil'),
+                    'parallaxtotop' => __('Parallax To Top', 'ababil'),
+                    'parallaxtobottom' => __('Parallax To Bottom', 'ababil'),
+                    'scaledownfromright' => __('Zoom Out From Right', 'ababil'),
+                    'scaledownfromleft' => __('Zoom Out From Left', 'ababil'),
+                    'scaledownfromtop' => __('Zoom Out From Top', 'ababil'),
+                    'scaledownfrombottom' => __('Zoom Out From Bottom', 'ababil'),
+                    'zoomout' => __('Zoom Out', 'ababil'),
+                    'zoomin' => __('Zoom In', 'ababil'),
+                    'slotzoom-horizontal' => __('Zoom Slots Horizontal', 'ababil'),
+                    'slotzoom-vertical' => __('Zoom Slots Vertical', 'ababil'),
                     'fade' => __('Fade', 'ababil'),
-                    'zoom' => __('Zoom', 'ababil'),
-                    'flip' => __('Flip', 'ababil'),
+                    'random-static' => __('Random Static', 'ababil'),
+                    'random' => __('Random', 'ababil'),
                 ],
             ]
         );
@@ -154,7 +187,7 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                 'label' => __('Color', 'ababil'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -164,6 +197,19 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'name' => 'segment_typography',
                 'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'fields_options' => [
+                    'typography' => ['default' => 'yes'],
+                    'font_size' => [
+                        'selectors' => [
+                            '{{WRAPPER}} {{CURRENT_ITEM}}' => 'font-size: {{SIZE}}{{UNIT}} !important;',
+                        ],
+                    ],
+                    'font_weight' => [
+                        'selectors' => [
+                            '{{WRAPPER}} {{CURRENT_ITEM}}' => 'font-weight: {{VALUE}} !important;',
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -176,11 +222,35 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                 'options' => [
                     'none' => __('None', 'ababil'),
                     'fadeIn' => __('Fade In', 'ababil'),
-                    'fadeInUp' => __('Fade In Up', 'ababil'),
-                    'fadeInDown' => __('Fade In Down', 'ababil'),
-                    'fadeInLeft' => __('Fade In Left', 'ababil'),
-                    'fadeInRight' => __('Fade In Right', 'ababil'),
+                    'slideInTop' => __('Slide In Top', 'ababil'),
+                    'slideInBottom' => __('Slide In Bottom', 'ababil'),
+                    'slideInLeft' => __('Slide In Left', 'ababil'),
+                    'slideInRight' => __('Slide In Right', 'ababil'),
                     'zoomIn' => __('Zoom In', 'ababil'),
+                    'bounceIn' => __('Bounce In', 'ababil'),
+                    'flipInX' => __('Flip In X', 'ababil'),
+                    'flipInY' => __('Flip In Y', 'ababil'),
+                    'rotateIn' => __('Rotate In', 'ababil'),
+                    'expand' => __('Expand', 'ababil'),
+                    'pulse' => __('Pulse', 'ababil'),
+                    'bounce' => __('Bounce', 'ababil'),
+                    'shake' => __('Shake', 'ababil'),
+                    'swing' => __('Swing', 'ababil'),
+                    'wobble' => __('Wobble', 'ababil'),
+                    'tada' => __('Tada', 'ababil'),
+                    'typewriter' => __('Typewriter', 'ababil'),
+                    'wordSlideIn' => __('Word Slide In', 'ababil'),
+                    'letterFadeIn' => __('Letter Fade In', 'ababil'),
+                    'wave' => __('Wave', 'ababil'),
+                    'scramble' => __('Scramble', 'ababil'),
+                    'staggeredFadeIn' => __('Staggered Fade In', 'ababil'),
+                    'masonryLoad' => __('Masonry Load', 'ababil'),
+                    'cascadeSlideIn' => __('Cascade Slide In', 'ababil'),
+                    'hoverGrow' => __('Hover Grow', 'ababil'),
+                    'hoverLift' => __('Hover Lift', 'ababil'),
+                    'hoverRotate' => __('Hover Rotate', 'ababil'),
+                    'ripple' => __('Ripple', 'ababil'),
+                    'pressShrink' => __('Press Shrink', 'ababil'),
                 ],
             ]
         );
@@ -237,15 +307,39 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subheading Animation', 'ababil'),
                 'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'fadeInUp',
+                'default' => 'fadeIn',
                 'options' => [
                     'none' => __('None', 'ababil'),
                     'fadeIn' => __('Fade In', 'ababil'),
-                    'fadeInUp' => __('Fade In Up', 'ababil'),
-                    'fadeInDown' => __('Fade In Down', 'ababil'),
-                    'fadeInLeft' => __('Fade In Left', 'ababil'),
-                    'fadeInRight' => __('Fade In Right', 'ababil'),
+                    'slideInTop' => __('Slide In Top', 'ababil'),
+                    'slideInBottom' => __('Slide In Bottom', 'ababil'),
+                    'slideInLeft' => __('Slide In Left', 'ababil'),
+                    'slideInRight' => __('Slide In Right', 'ababil'),
                     'zoomIn' => __('Zoom In', 'ababil'),
+                    'bounceIn' => __('Bounce In', 'ababil'),
+                    'flipInX' => __('Flip In X', 'ababil'),
+                    'flipInY' => __('Flip In Y', 'ababil'),
+                    'rotateIn' => __('Rotate In', 'ababil'),
+                    'expand' => __('Expand', 'ababil'),
+                    'pulse' => __('Pulse', 'ababil'),
+                    'bounce' => __('Bounce', 'ababil'),
+                    'shake' => __('Shake', 'ababil'),
+                    'swing' => __('Swing', 'ababil'),
+                    'wobble' => __('Wobble', 'ababil'),
+                    'tada' => __('Tada', 'ababil'),
+                    'typewriter' => __('Typewriter', 'ababil'),
+                    'wordSlideIn' => __('Word Slide In', 'ababil'),
+                    'letterFadeIn' => __('Letter Fade In', 'ababil'),
+                    'wave' => __('Wave', 'ababil'),
+                    'scramble' => __('Scramble', 'ababil'),
+                    'staggeredFadeIn' => __('Staggered Fade In', 'ababil'),
+                    'masonryLoad' => __('Masonry Load', 'ababil'),
+                    'cascadeSlideIn' => __('Cascade Slide In', 'ababil'),
+                    'hoverGrow' => __('Hover Grow', 'ababil'),
+                    'hoverLift' => __('Hover Lift', 'ababil'),
+                    'hoverRotate' => __('Hover Rotate', 'ababil'),
+                    'ripple' => __('Ripple', 'ababil'),
+                    'pressShrink' => __('Press Shrink', 'ababil'),
                 ],
             ]
         );
@@ -288,15 +382,39 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Description Animation', 'ababil'),
                 'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'fadeInUp',
+                'default' => 'fadeIn',
                 'options' => [
                     'none' => __('None', 'ababil'),
                     'fadeIn' => __('Fade In', 'ababil'),
-                    'fadeInUp' => __('Fade In Up', 'ababil'),
-                    'fadeInDown' => __('Fade In Down', 'ababil'),
-                    'fadeInLeft' => __('Fade In Left', 'ababil'),
-                    'fadeInRight' => __('Fade In Right', 'ababil'),
+                    'slideInTop' => __('Slide In Top', 'ababil'),
+                    'slideInBottom' => __('Slide In Bottom', 'ababil'),
+                    'slideInLeft' => __('Slide In Left', 'ababil'),
+                    'slideInRight' => __('Slide In Right', 'ababil'),
                     'zoomIn' => __('Zoom In', 'ababil'),
+                    'bounceIn' => __('Bounce In', 'ababil'),
+                    'flipInX' => __('Flip In X', 'ababil'),
+                    'flipInY' => __('Flip In Y', 'ababil'),
+                    'rotateIn' => __('Rotate In', 'ababil'),
+                    'expand' => __('Expand', 'ababil'),
+                    'pulse' => __('Pulse', 'ababil'),
+                    'bounce' => __('Bounce', 'ababil'),
+                    'shake' => __('Shake', 'ababil'),
+                    'swing' => __('Swing', 'ababil'),
+                    'wobble' => __('Wobble', 'ababil'),
+                    'tada' => __('Tada', 'ababil'),
+                    'typewriter' => __('Typewriter', 'ababil'),
+                    'wordSlideIn' => __('Word Slide In', 'ababil'),
+                    'letterFadeIn' => __('Letter Fade In', 'ababil'),
+                    'wave' => __('Wave', 'ababil'),
+                    'scramble' => __('Scramble', 'ababil'),
+                    'staggeredFadeIn' => __('Staggered Fade In', 'ababil'),
+                    'masonryLoad' => __('Masonry Load', 'ababil'),
+                    'cascadeSlideIn' => __('Cascade Slide In', 'ababil'),
+                    'hoverGrow' => __('Hover Grow', 'ababil'),
+                    'hoverLift' => __('Hover Lift', 'ababil'),
+                    'hoverRotate' => __('Hover Rotate', 'ababil'),
+                    'ripple' => __('Ripple', 'ababil'),
+                    'pressShrink' => __('Press Shrink', 'ababil'),
                 ],
             ]
         );
@@ -353,15 +471,39 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Button Animation', 'ababil'),
                 'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'fadeInUp',
+                'default' => 'fadeIn',
                 'options' => [
                     'none' => __('None', 'ababil'),
                     'fadeIn' => __('Fade In', 'ababil'),
-                    'fadeInUp' => __('Fade In Up', 'ababil'),
-                    'fadeInDown' => __('Fade In Down', 'ababil'),
-                    'fadeInLeft' => __('Fade In Left', 'ababil'),
-                    'fadeInRight' => __('Fade In Right', 'ababil'),
+                    'slideInTop' => __('Slide In Top', 'ababil'),
+                    'slideInBottom' => __('Slide In Bottom', 'ababil'),
+                    'slideInLeft' => __('Slide In Left', 'ababil'),
+                    'slideInRight' => __('Slide In Right', 'ababil'),
                     'zoomIn' => __('Zoom In', 'ababil'),
+                    'bounceIn' => __('Bounce In', 'ababil'),
+                    'flipInX' => __('Flip In X', 'ababil'),
+                    'flipInY' => __('Flip In Y', 'ababil'),
+                    'rotateIn' => __('Rotate In', 'ababil'),
+                    'expand' => __('Expand', 'ababil'),
+                    'pulse' => __('Pulse', 'ababil'),
+                    'bounce' => __('Bounce', 'ababil'),
+                    'shake' => __('Shake', 'ababil'),
+                    'swing' => __('Swing', 'ababil'),
+                    'wobble' => __('Wobble', 'ababil'),
+                    'tada' => __('Tada', 'ababil'),
+                    'typewriter' => __('Typewriter', 'ababil'),
+                    'wordSlideIn' => __('Word Slide In', 'ababil'),
+                    'letterFadeIn' => __('Letter Fade In', 'ababil'),
+                    'wave' => __('Wave', 'ababil'),
+                    'scramble' => __('Scramble', 'ababil'),
+                    'staggeredFadeIn' => __('Staggered Fade In', 'ababil'),
+                    'masonryLoad' => __('Masonry Load', 'ababil'),
+                    'cascadeSlideIn' => __('Cascade Slide In', 'ababil'),
+                    'hoverGrow' => __('Hover Grow', 'ababil'),
+                    'hoverLift' => __('Hover Lift', 'ababil'),
+                    'hoverRotate' => __('Hover Rotate', 'ababil'),
+                    'ripple' => __('Ripple', 'ababil'),
+                    'pressShrink' => __('Press Shrink', 'ababil'),
                 ],
             ]
         );
@@ -385,6 +527,146 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                 'default' => 600,
                 'min' => 0,
                 'step' => 100,
+            ]
+        );
+
+        // Button Custom Styling
+        $repeater->add_control(
+            'button_custom_style',
+            [
+                'label' => __('Custom Button Style', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Yes', 'ababil'),
+                'label_off' => __('No', 'ababil'),
+                'default' => 'no',
+                'separator' => 'before',
+            ]
+        );
+
+        $repeater->add_control(
+            'button_text_color',
+            [
+                'label' => __('Text Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}} !important;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_background_color',
+            [
+                'label' => __('Background Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'background-color: {{VALUE}} !important;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_border_color',
+            [
+                'label' => __('Border Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-color: {{VALUE}} !important;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_border_width',
+            [
+                'label' => __('Border Width', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 10,
+                    ],
+                ],
+                'default' => [
+                    'size' => 2,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-width: {{SIZE}}{{UNIT}} !important; border-style: solid;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_border_radius',
+            [
+                'label' => __('Border Radius', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'button_padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 12,
+                    'right' => 24,
+                    'bottom' => 12,
+                    'left' => 24,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
+            ]
+        );
+
+        $repeater->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'button_typography',
+                'selector' => '{{WRAPPER}} {{CURRENT_ITEM}}',
+                'fields_options' => [
+                    'typography' => ['default' => 'yes'],
+                    'font_size' => [
+                        'selectors' => [
+                            '{{WRAPPER}} {{CURRENT_ITEM}}' => 'font-size: {{SIZE}}{{UNIT}} !important;',
+                        ],
+                    ],
+                    'font_weight' => [
+                        'selectors' => [
+                            '{{WRAPPER}} {{CURRENT_ITEM}}' => 'font-weight: {{VALUE}} !important;',
+                        ],
+                    ],
+                ],
+                'condition' => [
+                    'button_custom_style' => 'yes',
+                ],
             ]
         );
 
@@ -507,13 +789,35 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'lazy_load_images',
+            [
+                'label' => __('Lazy Load Images', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Yes', 'ababil'),
+                'label_off' => __('No', 'ababil'),
+                'default' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'touch_swipe',
+            [
+                'label' => __('Enable Touch Swipe', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Yes', 'ababil'),
+                'label_off' => __('No', 'ababil'),
+                'default' => 'yes',
+            ]
+        );
+
         $this->end_controls_section();
 
-        // Style Tab
+        // Style Tab: General
         $this->start_controls_section(
-            'style_section',
+            'general_style',
             [
-                'label' => __('Slider Style', 'ababil'),
+                'label' => __('General', 'ababil'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -535,12 +839,23 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     ],
                 ],
                 'default' => [
-                    'unit' => 'px',
                     'size' => 600,
+                    'unit' => 'px',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-slider, {{WRAPPER}} .ababil-slide' => 'height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-slider' => 'height: {{SIZE}}{{UNIT}};',
                 ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // Style Tab: Content
+        $this->start_controls_section(
+            'content_style',
+            [
+                'label' => __('Content', 'ababil'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -549,46 +864,26 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Content Padding', 'ababil'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%'],
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 50,
+                    'right' => 50,
+                    'bottom' => 50,
+                    'left' => 50,
+                ],
                 'selectors' => [
                     '{{WRAPPER}} .ababil-slide-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->add_responsive_control(
-            'content_width',
-            [
-                'label' => __('Content Width', 'ababil'),
-                'type' => \Elementor\Controls_Manager::SLIDER,
-                'size_units' => ['px', '%'],
-                'range' => [
-                    'px' => [
-                        'min' => 300,
-                        'max' => 1200,
-                    ],
-                    '%' => [
-                        'min' => 20,
-                        'max' => 100,
-                    ],
-                ],
-                'default' => [
-                    'unit' => '%',
-                    'size' => 80,
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-slide-content' => 'max-width: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
         $this->add_control(
-            'content_horizontal_alignment',
+            'content_align',
             [
-                'label' => __('Horizontal Alignment', 'ababil'),
+                'label' => __('Content Alignment', 'ababil'),
                 'type' => \Elementor\Controls_Manager::CHOOSE,
                 'options' => [
-                    'flex-start' => [
+                    'left' => [
                         'title' => __('Left', 'ababil'),
                         'icon' => 'eicon-text-align-left',
                     ],
@@ -596,59 +891,25 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                         'title' => __('Center', 'ababil'),
                         'icon' => 'eicon-text-align-center',
                     ],
-                    'flex-end' => [
+                    'right' => [
                         'title' => __('Right', 'ababil'),
                         'icon' => 'eicon-text-align-right',
                     ],
                 ],
                 'default' => 'center',
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-slide-content' => 'align-items: {{VALUE}};',
+                    '{{WRAPPER}} .ababil-slide-content' => 'align-items: {{VALUE}}; text-align: {{VALUE}};',
                 ],
             ]
         );
 
+        // Heading Styles
         $this->add_control(
-            'content_vertical_alignment',
-            [
-                'label' => __('Vertical Alignment', 'ababil'),
-                'type' => \Elementor\Controls_Manager::CHOOSE,
-                'options' => [
-                    'flex-start' => [
-                        'title' => __('Top', 'ababil'),
-                        'icon' => 'eicon-v-align-top',
-                    ],
-                    'center' => [
-                        'title' => __('Center', 'ababil'),
-                        'icon' => 'eicon-v-align-middle',
-                    ],
-                    'flex-end' => [
-                        'title' => __('Bottom', 'ababil'),
-                        'icon' => 'eicon-v-align-bottom',
-                    ],
-                ],
-                'default' => 'center',
-                'selectors' => [
-                    '{{WRAPPER}} .ababil-slide-content' => 'justify-content: {{VALUE}};',
-                ],
-            ]
-        );
-
-        // Heading Style
-        $this->add_control(
-            'heading_style',
+            'heading_heading',
             [
                 'label' => __('Heading', 'ababil'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'heading_typography',
-                'selector' => '{{WRAPPER}} .ababil-slide-heading',
             ]
         );
 
@@ -663,33 +924,71 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_responsive_control(
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'heading_typography',
+                'selector' => '{{WRAPPER}} .ababil-slide-heading',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Text_Shadow::get_type(),
+            [
+                'name' => 'heading_text_shadow',
+                'selector' => '{{WRAPPER}} .ababil-slide-heading',
+            ]
+        );
+
+        $this->add_control(
+            'heading_background_color',
+            [
+                'label' => __('Background Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-heading' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'heading_padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-heading' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'heading_margin',
             [
                 'label' => __('Margin', 'ababil'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 20,
+                    'left' => 0,
+                    'unit' => 'px',
+                ],
                 'selectors' => [
                     '{{WRAPPER}} .ababil-slide-heading' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
-        // Subheading Style
+        // Subheading Styles
         $this->add_control(
-            'subheading_style',
+            'subheading_heading',
             [
                 'label' => __('Subheading', 'ababil'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'subheading_typography',
-                'selector' => '{{WRAPPER}} .ababil-slide-subheading',
             ]
         );
 
@@ -704,33 +1003,71 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_responsive_control(
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'subheading_typography',
+                'selector' => '{{WRAPPER}} .ababil-slide-subheading',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Text_Shadow::get_type(),
+            [
+                'name' => 'subheading_text_shadow',
+                'selector' => '{{WRAPPER}} .ababil-slide-subheading',
+            ]
+        );
+
+        $this->add_control(
+            'subheading_background_color',
+            [
+                'label' => __('Background Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-subheading' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'subheading_padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-subheading' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'subheading_margin',
             [
                 'label' => __('Margin', 'ababil'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 20,
+                    'left' => 0,
+                    'unit' => 'px',
+                ],
                 'selectors' => [
                     '{{WRAPPER}} .ababil-slide-subheading' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
-        // Description Style
+        // Description Styles
         $this->add_control(
-            'description_style',
+            'description_heading',
             [
                 'label' => __('Description', 'ababil'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'description_typography',
-                'selector' => '{{WRAPPER}} .ababil-slide-description',
             ]
         );
 
@@ -745,21 +1082,67 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_responsive_control(
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'description_typography',
+                'selector' => '{{WRAPPER}} .ababil-slide-description',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Text_Shadow::get_type(),
+            [
+                'name' => 'description_text_shadow',
+                'selector' => '{{WRAPPER}} .ababil-slide-description',
+            ]
+        );
+
+        $this->add_control(
+            'description_background_color',
+            [
+                'label' => __('Background Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-description' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'description_padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-description' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'description_margin',
             [
                 'label' => __('Margin', 'ababil'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 20,
+                    'left' => 0,
+                    'unit' => 'px',
+                ],
                 'selectors' => [
                     '{{WRAPPER}} .ababil-slide-description' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
-        // Button Style
+        // Button Styles
         $this->add_control(
-            'button_style',
+            'button_heading',
             [
                 'label' => __('Button', 'ababil'),
                 'type' => \Elementor\Controls_Manager::HEADING,
@@ -767,20 +1150,8 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'button_typography',
-                'selector' => '{{WRAPPER}} .ababil-slide-button',
-            ]
-        );
-
-        $this->start_controls_tabs('button_tabs');
-
-        $this->start_controls_tab('button_normal', ['label' => __('Normal', 'ababil')]);
-
         $this->add_control(
-            'button_color',
+            'button_text_color',
             [
                 'label' => __('Text Color', 'ababil'),
                 'type' => \Elementor\Controls_Manager::COLOR,
@@ -790,55 +1161,50 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_group_control(
-            \Elementor\Group_Control_Background::get_type(),
-            [
-                'name' => 'button_background',
-                'types' => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .ababil-slide-button',
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab('button_hover', ['label' => __('Hover', 'ababil')]);
-
         $this->add_control(
-            'button_hover_color',
+            'button_background_color',
             [
-                'label' => __('Text Color', 'ababil'),
+                'label' => __('Background Color', 'ababil'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-slide-button:hover' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .ababil-slide-button' => 'background-color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->add_group_control(
-            \Elementor\Group_Control_Background::get_type(),
+        $this->add_control(
+            'button_border_color',
             [
-                'name' => 'button_hover_background',
-                'types' => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .ababil-slide-button:hover',
-            ]
-        );
-
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
-
-        $this->add_responsive_control(
-            'button_padding',
-            [
-                'label' => __('Padding', 'ababil'),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
+                'label' => __('Border Color', 'ababil'),
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-slide-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .ababil-slide-button' => 'border-color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->add_responsive_control(
+        $this->add_control(
+            'button_border_width',
+            [
+                'label' => __('Border Width', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 10,
+                    ],
+                ],
+                'default' => [
+                    'size' => 2,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-button' => 'border-width: {{SIZE}}{{UNIT}}; border-style: solid;',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'button_border_radius',
             [
                 'label' => __('Border Radius', 'ababil'),
@@ -850,9 +1216,62 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'button_padding',
+            [
+                'label' => __('Padding', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 12,
+                    'right' => 24,
+                    'bottom' => 12,
+                    'left' => 24,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'button_typography',
+                'selector' => '{{WRAPPER}} .ababil-slide-button',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'button_box_shadow',
+                'selector' => '{{WRAPPER}} .ababil-slide-button',
+            ]
+        );
+
+        $this->add_control(
+            'button_margin',
+            [
+                'label' => __('Margin', 'ababil'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'default' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 0,
+                    'left' => 0,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-slide-button' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
         $this->end_controls_section();
 
-        // Pagination Style
+        // Style Tab: Pagination
         $this->start_controls_section(
             'pagination_style',
             [
@@ -865,12 +1284,53 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'pagination_position',
+            [
+                'label' => __('Position', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'bottom',
+                'options' => [
+                    'top' => __('Top', 'ababil'),
+                    'bottom' => __('Bottom', 'ababil'),
+                    'custom' => __('Custom', 'ababil'),
+                ],
+                'prefix_class' => 'ababil-pagination-position-',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'pagination_offset',
+            [
+                'label' => __('Offset', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => -100,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}}.ababil-pagination-position-top .ababil-slider-pagination' => 'top: {{SIZE}}{{UNIT}}; bottom: auto;',
+                    '{{WRAPPER}}.ababil-pagination-position-bottom .ababil-slider-pagination' => 'bottom: {{SIZE}}{{UNIT}}; top: auto;',
+                    '{{WRAPPER}}.ababil-pagination-position-custom .ababil-slider-pagination' => 'top: {{SIZE}}{{UNIT}}; bottom: auto;',
+                ],
+                'condition' => [
+                    'pagination_position' => ['top', 'bottom', 'custom'],
+                ],
+            ]
+        );
+
+        $this->add_control(
             'pagination_color',
             [
                 'label' => __('Dot Color', 'ababil'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-pagination-dot' => 'border-color: {{VALUE}}; background-color: transparent;',
+                    '{{WRAPPER}} .ababil-pagination-dot' => 'border-color: {{VALUE}};',
                 ],
             ]
         );
@@ -902,7 +1362,7 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'size' => 12,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-pagination-dot' => 'width: {{SIZE}}px; height: {{SIZE}}px;',
+                    '{{WRAPPER}} .ababil-pagination-dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -923,14 +1383,14 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'size' => 5,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-pagination-dot' => 'margin: 0 {{SIZE}}px;',
+                    '{{WRAPPER}} .ababil-pagination-dot' => 'margin: 0 {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
         $this->end_controls_section();
 
-        // Navigation Style
+        // Style Tab: Navigation
         $this->start_controls_section(
             'navigation_style',
             [
@@ -947,12 +1407,43 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Position', 'ababil'),
                 'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'inside',
+                'default' => 'middle',
                 'options' => [
-                    'inside' => __('Inside Slider', 'ababil'),
-                    'outside' => __('Outside Slider', 'ababil'),
+                    'top' => __('Top', 'ababil'),
+                    'middle' => __('Middle', 'ababil'),
+                    'bottom' => __('Bottom', 'ababil'),
+                    'custom' => __('Custom', 'ababil'),
                 ],
                 'prefix_class' => 'ababil-nav-position-',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'nav_vertical_offset',
+            [
+                'label' => __('Vertical Offset', 'ababil'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => -100,
+                        'max' => 100,
+                    ],
+                    '%' => [
+                        'min' => -50,
+                        'max' => 50,
+                    ],
+                ],
+                'default' => [
+                    'size' => 0,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}}.ababil-nav-position-custom .ababil-slider-nav' => 'top: {{SIZE}}{{UNIT}}; transform: none;',
+                ],
+                'condition' => [
+                    'nav_position' => 'custom',
+                ],
             ]
         );
 
@@ -1016,7 +1507,7 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'size' => 40,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-nav-button' => 'width: {{SIZE}}px; height: {{SIZE}}px;',
+                    '{{WRAPPER}} .ababil-nav-button' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -1037,12 +1528,12 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                     'size' => 20,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .ababil-nav-button' => 'font-size: {{SIZE}}px;',
+                    '{{WRAPPER}} .ababil-nav-button' => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->add_responsive_control(
+        $this->add_control(
             'nav_border_radius',
             [
                 'label' => __('Border Radius', 'ababil'),
@@ -1065,13 +1556,20 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
         $this->add_render_attribute('slider', 'data-loop', $settings['loop']);
         $this->add_render_attribute('slider', 'data-pause-on-hover', $settings['pause_on_hover']);
         $this->add_render_attribute('slider', 'data-transition-speed', $settings['transition_speed']);
+        $this->add_render_attribute('slider', 'data-lazy-load', $settings['lazy_load_images']);
+        $this->add_render_attribute('slider', 'data-touch-swipe', $settings['touch_swipe']);
         ?>
         <div <?php $this->print_render_attribute_string('slider'); ?>>
             <div class="ababil-slider-wrapper">
                 <?php foreach ($settings['slides'] as $index => $slide) : ?>
                     <div class="ababil-slide elementor-repeater-item-<?php echo esc_attr($slide['_id']); ?> <?php echo $index === 0 ? 'active' : ''; ?>"
                          data-transition="<?php echo esc_attr($slide['slide_transition_effect']); ?>">
-                        <div class="ababil-slide-background" style="background-image: url(<?php echo esc_url($slide['slide_image']['url']); ?>);"></div>
+                        <div class="ababil-slide-background"
+                             <?php if ($settings['lazy_load_images'] === 'yes' && $index !== 0) : ?>
+                                 data-src="<?php echo esc_url($slide['slide_image']['url']); ?>"
+                             <?php else : ?>
+                                 style="background-image: url(<?php echo esc_url($slide['slide_image']['url']); ?>);"
+                             <?php endif; ?>></div>
                         <div class="ababil-slide-overlay"></div>
                         <div class="ababil-slide-content">
                             <?php if (!empty($slide['heading_segments'])) : ?>
@@ -1106,7 +1604,8 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                             <?php endif; ?>
 
                             <?php if (!empty($slide['button_text']) && !empty($slide['button_link']['url'])) : ?>
-                                <a href="<?php echo esc_url($slide['button_link']['url']); ?>" class="ababil-slide-button"
+                                <a href="<?php echo esc_url($slide['button_link']['url']); ?>" 
+                                   class="ababil-slide-button elementor-repeater-item-<?php echo esc_attr($slide['_id']); ?>"
                                    data-animation="<?php echo esc_attr($slide['button_animation']); ?>"
                                    data-duration="<?php echo esc_attr($slide['button_animation_duration']); ?>"
                                    data-delay="<?php echo esc_attr($slide['button_animation_delay']); ?>">
@@ -1143,13 +1642,16 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
         view.addRenderAttribute('slider', 'data-loop', settings.loop);
         view.addRenderAttribute('slider', 'data-pause-on-hover', settings.pause_on_hover);
         view.addRenderAttribute('slider', 'data-transition-speed', settings.transition_speed);
+        view.addRenderAttribute('slider', 'data-lazy-load', settings.lazy_load_images);
+        view.addRenderAttribute('slider', 'data-touch-swipe', settings.touch_swipe);
         #>
         <div {{{ view.getRenderAttributeString('slider') }}}>
             <div class="ababil-slider-wrapper">
                 <# _.each(settings.slides, function(slide, index) { #>
                     <div class="ababil-slide elementor-repeater-item-{{ slide._id }} {{ index === 0 ? 'active' : '' }}"
                          data-transition="{{ slide.slide_transition_effect }}">
-                        <div class="ababil-slide-background" style="background-image: url({{ slide.slide_image.url }});"></div>
+                        <div class="ababil-slide-background"
+                             {{{ settings.lazy_load_images === 'yes' && index !== 0 ? 'data-src="' + slide.slide_image.url + '"' : 'style="background-image: url(' + slide.slide_image.url + ');"' }}}></div>
                         <div class="ababil-slide-overlay"></div>
                         <div class="ababil-slide-content">
                             <# if (slide.heading_segments.length) { #>
@@ -1184,7 +1686,8 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
                             <# } #>
 
                             <# if (slide.button_text && slide.button_link.url) { #>
-                                <a href="{{ slide.button_link.url }}" class="ababil-slide-button"
+                                <a href="{{ slide.button_link.url }}" 
+                                   class="ababil-slide-button elementor-repeater-item-{{ slide._id }}"
                                    data-animation="{{ slide.button_animation }}"
                                    data-duration="{{ slide.button_animation_duration }}"
                                    data-delay="{{ slide.button_animation_delay }}">
@@ -1212,3 +1715,4 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
         <?php
     }
 }
+?>
