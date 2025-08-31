@@ -49,7 +49,9 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $repeater = new \Elementor\Repeater();
+        $repeater = new \Elementor\Repeater([
+            'title_field' => __('Slide', 'ababil') . ' {{{ slide_number }}}',
+        ]);
 
         // Background Image
         $repeater->add_control(
@@ -184,10 +186,10 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
         $heading_repeater->add_control(
             'segment_color',
             [
-                'label' => __('Color', 'ababil'),
+                'label' => __('Segment Color', 'ababil'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .ababil-heading-segment.elementor-repeater-item-{{CURRENT_ITEM}}' => 'color: {{VALUE}} !important; font-weight: bold !important;',
                 ],
             ]
         );
@@ -1550,6 +1552,11 @@ class Ababil_Slider_Widget extends \Elementor\Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
+        if (!empty($settings['slides'])) {
+            foreach ($settings['slides'] as $i => &$slide) {
+                $slide['slide_number'] = $i + 1;
+            }
+        }
         $this->add_render_attribute('slider', 'class', 'ababil-slider');
         $this->add_render_attribute('slider', 'data-autoplay', $settings['autoplay']);
         $this->add_render_attribute('slider', 'data-autoplay-speed', $settings['autoplay_speed']);
