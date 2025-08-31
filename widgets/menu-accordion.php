@@ -553,7 +553,7 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'submenu_style',
             [
-                'label' => __( 'Submenu', 'ababil' ),
+                'label' => __( 'Submenu Container', 'ababil' ),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -712,6 +712,265 @@ class Ababil_Menu_Accordion_Widget extends \Elementor\Widget_Base {
         );
 
         $this->end_controls_section();
+
+
+        // NEW: Add a section for submenu items styling
+        $this->start_controls_section(
+            'submenu_items_style',
+            [
+                'label' => __( 'Submenu Items', 'ababil' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'submenu_item_typography',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header a',
+            ]
+        );
+
+        $this->start_controls_tabs( 'submenu_item_tabs' );
+
+        $this->start_controls_tab( 'submenu_item_normal', [ 'label' => __( 'Normal', 'ababil' ) ] );
+
+        $this->add_control(
+            'submenu_item_color',
+            [
+                'label' => __( 'Text Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'submenu_item_border',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_border_radius',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_padding',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_margin',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'submenu_item_box_shadow',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'submenu_item_hover', [ 'label' => __( 'Hover', 'ababil' ) ] );
+
+        $this->add_control(
+            'submenu_item_hover_color',
+            [
+                'label' => __( 'Text Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_hover_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'submenu_item_border_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover',
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_border_radius_hover',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_padding_hover',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_margin_hover',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'submenu_item_box_shadow_hover',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-header:hover',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab( 'submenu_item_active', [ 'label' => __( 'Active', 'ababil' ) ] );
+
+        $this->add_control(
+            'submenu_item_active_color',
+            [
+                'label' => __( 'Text Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_active_background',
+            [
+                'label' => __( 'Background Color', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'submenu_item_border_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->add_control(
+            'submenu_item_border_radius_active',
+            [
+                'label' => __( 'Border Radius', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', '%', 'em' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_padding_active',
+            [
+                'label' => __( 'Padding', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'submenu_item_margin_active',
+            [
+                'label' => __( 'Margin', 'ababil' ),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'submenu_item_box_shadow_active',
+                'selector' => '{{WRAPPER}} .ababil-menu-accordion-submenu .ababil-menu-accordion-item.active .ababil-menu-accordion-header',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
+        $this->end_controls_section();
+        
 
         $this->start_controls_section(
             'toggle_icon_style',
