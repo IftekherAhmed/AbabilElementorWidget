@@ -1617,6 +1617,7 @@ class Ababil_Menu_Accordion_Walker extends Walker_Nav_Menu {
 
         $output .= '<div class="ababil-menu-accordion-header">';
 
+        // Toggler icon (not a link)
         if ( $has_children && $icon_position === 'left' ) {
             $output .= '<span class="ababil-menu-accordion-toggle">';
             if ( $icon_html_normal ) $output .= '<span class="ababil-menu-accordion-icon-normal">' . $icon_html_normal . '</span>';
@@ -1624,13 +1625,15 @@ class Ababil_Menu_Accordion_Walker extends Walker_Nav_Menu {
             $output .= '</span>';
         }
 
-        $output .= '<a ' . $attributes . '>';
+        // Only the menu title is a link
+        $output .= '<a' . $attributes . '>';
         if ( $show_indicator ) {
             $output .= '<span class="ababil-menu-indicator">' . $indicator . '</span>';
         }
         $output .= '<span class="ababil-menu-accordion-title-text">' . apply_filters( 'the_title', $item->title, $item->ID ) . '</span>';
         $output .= '</a>';
 
+        // Toggler icon (not a link)
         if ( $has_children && $icon_position === 'right' ) {
             $output .= '<span class="ababil-menu-accordion-toggle">';
             if ( $icon_html_normal ) $output .= '<span class="ababil-menu-accordion-icon-normal">' . $icon_html_normal . '</span>';
