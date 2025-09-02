@@ -985,6 +985,14 @@ class Ababil_Page_Header_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_group_control(
+            \Elementor\Group_Control_Css_Filter::get_type(),
+            [
+                'name' => 'image_css_filters',
+                'selector' => '{{WRAPPER}} .ababil-page-header::before',
+            ]
+        );
+
         $this->end_controls_section();
 
         // Style Tab: Title
