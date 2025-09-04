@@ -50,9 +50,6 @@ function ababil_register_widgets( $widgets_manager ) {
 
     require_once( __DIR__ . '/widgets/menu-accordion.php' );
     $widgets_manager->register( new \Ababil_Menu_Accordion_Widget() );
-
-    require_once( __DIR__ . '/widgets/slider.php' );
-    $widgets_manager->register( new \Ababil_Slider_Widget() );
 }
 
 /* For Code Injection Widget */
@@ -110,12 +107,6 @@ add_action( 'elementor/frontend/after_register_styles', function() {
         [],
         '1.0.0'
     );
-    wp_register_style(
-        'ababil-slider',
-        plugins_url( '/assets/css/slider.css', __FILE__ ),
-        [],
-        '1.0.0'
-    );
 } );
 
 // Register assets (JS)
@@ -130,13 +121,6 @@ add_action( 'elementor/frontend/after_register_scripts', function() {
     wp_register_script(
         'ababil-menu-accordion',
         plugins_url( '/assets/js/menu-accordion.js', __FILE__ ),
-        [ 'jquery' ],
-        '1.0.0',
-        true
-    );
-    wp_register_script(
-        'ababil-slider',
-        plugins_url( '/assets/js/slider.js', __FILE__ ),
         [ 'jquery' ],
         '1.0.0',
         true
